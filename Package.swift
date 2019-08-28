@@ -11,8 +11,8 @@ let package = Package(
             name: "ImGui",
             targets: ["ImGui"]),
         .library(
-            name: "CImGui",
-            targets: ["CImGui"]),
+            name: "cimgui",
+            targets: ["cimgui"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -22,9 +22,9 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "ImGui",
-            dependencies: ["CImGui"]),
+            dependencies: ["cimgui"]),
         .target(
-            name: "CImGui"),
+            name: "cimgui"),
     ],
     cxxLanguageStandard: .cxx11
 )

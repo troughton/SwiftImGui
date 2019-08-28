@@ -1,4 +1,4 @@
-import CImGui
+import cimgui
 
 func scan<
     S : Sequence, U
