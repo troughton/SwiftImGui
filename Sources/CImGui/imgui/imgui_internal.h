@@ -112,6 +112,8 @@ typedef int ImGuiTextFlags;             // -> enum ImGuiTextFlags_          // F
 // STB libraries includes
 //-------------------------------------------------------------------------
 
+#include <string.h>
+
 namespace ImStb
 {
 
