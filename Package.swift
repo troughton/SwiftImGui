@@ -11,8 +11,9 @@ let package = Package(
             name: "ImGui",
             targets: ["ImGui"]),
         .library(
-            name: "cimgui",
-            targets: ["cimgui"]),
+            name: "CImGui",
+            targets: ["CImGui"]),
+//        .executable(name: "SwiftImGuiGenerator", targets: ["SwiftImGuiGenerator"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -22,9 +23,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "ImGui",
-            dependencies: ["cimgui"]),
+            dependencies: ["CImGui"]),
         .target(
-            name: "cimgui"),
+            name: "CImGui"),
+//        .target(
+//            name: "SwiftImGuiGenerator"),
     ],
     cxxLanguageStandard: .cxx11
 )

@@ -1,4 +1,4 @@
-import cimgui
+import CImGui
 
 func scan<
     S : Sequence, U
@@ -37,9 +37,37 @@ func withArrayOfCStrings<R>(
     }
 }
 
+extension SIMD2 where Scalar == Float {
+    @inlinable
+    init(_ imVec: ImVec2) {
+        self.init(imVec.x, imVec.y)
+    }
+}
+
+extension SIMD4 where Scalar == Float {
+    @inlinable
+    init(_ imVec: ImVec4) {
+        self.init(imVec.x, imVec.y, imVec.z, imVec.w)
+    }
+}
+
+extension ImVec2 {
+    @inlinable
+    init(_ v: SIMD2<Float>) {
+        self.init(x: v.x, y: v.y)
+    }
+}
+
+extension ImVec4 {
+    @inlinable
+    init(_ v: SIMD4<Float>) {
+        self.init(x: v.x, y: v.y, z: v.z, w: v.w)
+    }
+}
+
 extension ImDrawData {
-    public mutating func scaleClipRects(by factor: ImVec2) {
-        ImDrawData_ScaleClipRects(&self, factor)
+    public mutating func scaleClipRects(by factor: SIMD2<Float>) {
+        ImDrawData_ScaleClipRects(&self, ImVec2(factor))
     }
     
     public mutating func deindexAllBuffers() {
@@ -108,18 +136,18 @@ public final class ImGui {
             }
         }
         
-        public func addText(_ text: String, position: ImVec2, color: ImVec4) {
-            self.addText(text, position: position, color: igGetColorU32Vec4(color))
+        public func addText(_ text: String, position: SIMD2<Float>, color: SIMD4<Float>) {
+            self.addText(text, position: position, color: igGetColorU32Vec4(ImVec4(color)))
         }
         
-        public func addText(_ text: String, position: ImVec2, color: UInt32) {
+        public func addText(_ text: String, position: SIMD2<Float>, color: UInt32) {
             text.withCString { text in
                 self.addText(text, position: position, color: color)
             }
         }
         
-        public func addText(_ text: UnsafePointer<CChar>, position: ImVec2, color: UInt32) {
-            ImDrawList_AddText(self.imList, position, color, text, text + strlen(text))
+        public func addText(_ text: UnsafePointer<CChar>, position: SIMD2<Float>, color: UInt32) {
+            ImDrawList_AddTextVec2(self.imList, ImVec2(position), color, text, text + strlen(text))
         }
         
         public func clear() {
@@ -162,7 +190,7 @@ public final class ImGui {
         public static let noInputs                     = WindowFlags(rawValue: 1 << 9)
         /// Has a menu-bar
         public static let menuBar                      = WindowFlags(rawValue: 1 << 10)
-        /// Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f)); prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
+        /// Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(SIMD2<Float>(width,0.0f)); prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
         public static let horizontalScrollbar          = WindowFlags(rawValue: 1 << 11)
         /// Disable taking focus when transitioning from hidden to visible state
         public static let noFocusOnAppearing           = WindowFlags(rawValue: 1 << 12)
@@ -365,6 +393,36 @@ public final class ImGui {
         public static let pickerHueWheel = ColorEditFlags(rawValue: 1 << 26)
     }
     
+    public struct InputTextFlags: OptionSet {
+        public let rawValue: ImGuiInputTextFlags
+        
+        public init(rawValue: ImGuiInputTextFlags) {
+            self.rawValue = rawValue
+        }
+        
+        public static let charsDecimal = InputTextFlags(rawValue: 1)
+        public static let charsHexadecimal = InputTextFlags(rawValue: 2)
+        public static let charsUppercase = InputTextFlags(rawValue: 4)
+        public static let charsNoBlank = InputTextFlags(rawValue: 8)
+        public static let autoSelectAll = InputTextFlags(rawValue: 16)
+        public static let enterReturnsTrue = InputTextFlags(rawValue: 32)
+        public static let callbackCompletion = InputTextFlags(rawValue: 64)
+        public static let callbackHistory = InputTextFlags(rawValue: 128)
+        public static let callbackAlways = InputTextFlags(rawValue: 256)
+        public static let callbackCharFilter = InputTextFlags(rawValue: 512)
+        public static let allowTabInput = InputTextFlags(rawValue: 1024)
+        public static let ctrlEnterForNewLine = InputTextFlags(rawValue: 2048)
+        public static let noHorizontalScroll = InputTextFlags(rawValue: 4096)
+        public static let alwaysInsertMode = InputTextFlags(rawValue: 8192)
+        public static let readOnly = InputTextFlags(rawValue: 16384)
+        public static let password = InputTextFlags(rawValue: 32768)
+        public static let noUndoRedo = InputTextFlags(rawValue: 65536)
+        public static let charsScientific = InputTextFlags(rawValue: 131072)
+        public static let callbackResize = InputTextFlags(rawValue: 262144)
+        public static let multiline = InputTextFlags(rawValue: 1048576)
+        public static let noMarkEdited = InputTextFlags(rawValue: 2097152)
+    }
+    
     /// Condition for ImGui::SetWindow***(), SetNextWindow***(), SetNextTreeNode***() functions
     /// All those functions treat 0 as a shortcut to ImGuiCond_Always. From the point of view of the user use this as an enum (don't combine multiple values into flags).
     public enum Condition : ImGuiCond {
@@ -461,36 +519,40 @@ public final class ImGui {
         igEnd()
     }
     
-    public static func beginChild(strId: String, size: ImVec2, border: Bool, extraFlags: WindowFlags) -> Bool {
-        return igBeginChild(strId, size, border, extraFlags.rawValue)
+    public static func beginChild(strId: String, size: SIMD2<Float>, border: Bool, extraFlags: WindowFlags) -> Bool {
+        return igBeginChildStr(strId, ImVec2(size), border, extraFlags.rawValue)
     }
     
-    public static func beginChild(id: ImGuiID, size: ImVec2, border: Bool, extraFlags: WindowFlags) -> Bool {
-        return igBeginChildID(id, size, border, extraFlags.rawValue)
+    public static func beginChild(id: ImGuiID, size: SIMD2<Float>, border: Bool, extraFlags: WindowFlags) -> Bool {
+        return igBeginChildID(id, ImVec2(size), border, extraFlags.rawValue)
     }
     
     public static func endChild()  {
         igEndChild()
     }
     
-    public static var contentRegionMax : ImVec2 {
-        return ImVec2(igGetContentRegionMax())
+    public static var contentRegionMax : SIMD2<Float> {
+        var v = ImVec2()
+        igGetContentRegionMax(&v)
+        return SIMD2(v)
     }
     
-    public static var contentRegionAvail : ImVec2  {
-        return ImVec2(igGetContentRegionAvail())
+    public static var contentRegionAvail : SIMD2<Float>  {
+        var v = ImVec2()
+        igGetContentRegionAvail(&v)
+        return SIMD2(v)
     }
     
-    public static var contentRegionAvailWidth : ImVec2 {
-        return igGetContentRegionAvail()
+    public static var windowContentRegionMin : SIMD2<Float>  {
+        var v = ImVec2()
+        igGetWindowContentRegionMin(&v)
+        return SIMD2(v)
     }
     
-    public static var windowContentRegionMin : ImVec2  {
-        return ImVec2(igGetWindowContentRegionMin())
-    }
-    
-    public static var windowContentRegionMax : ImVec2  {
-        return ImVec2(igGetWindowContentRegionMax())
+    public static var windowContentRegionMax : SIMD2<Float>  {
+        var v = ImVec2()
+        igGetWindowContentRegionMax(&v)
+        return SIMD2(v)
     }
     
     public static var windowContentRegionWidth : Float {
@@ -501,12 +563,16 @@ public final class ImGui {
         return DrawList(igGetWindowDrawList())
     }
     
-    public static var windowPos : ImVec2  {
-        return ImVec2(igGetWindowPos())
+    public static var windowPos : SIMD2<Float>  {
+        var v = ImVec2()
+        igGetWindowPos(&v)
+        return SIMD2(v)
     }
     
-    public static var windowSize : ImVec2  {
-        return ImVec2(igGetWindowSize())
+    public static var windowSize : SIMD2<Float>  {
+        var v = ImVec2()
+        igGetWindowSize(&v)
+        return SIMD2(v)
     }
     
     public static var windowWidth : Float {
@@ -526,20 +592,20 @@ public final class ImGui {
     }
     
     
-    public static func setNextWindowPos(pos: ImVec2, condition: Condition = .always, pivot: ImVec2)  {
-        igSetNextWindowPos(pos, condition.rawValue, pivot)
+    public static func setNextWindowPos(pos: SIMD2<Float>, condition: Condition = .always, pivot: SIMD2<Float>)  {
+        igSetNextWindowPos(ImVec2(pos), condition.rawValue, ImVec2(pivot))
     }
     
-    public static func setNextWindowSize(size: ImVec2, condition: Condition = .always)  {
-        igSetNextWindowSize(size, condition.rawValue)
+    public static func setNextWindowSize(size: SIMD2<Float>, condition: Condition = .always)  {
+        igSetNextWindowSize(ImVec2(size), condition.rawValue)
     }
     
-    public static func setNextWindowSizeConstraints(sizeMin: ImVec2, sizeMax: ImVec2, customCallback: @escaping ImGuiSizeCallback, customCallbackData: UnsafeMutableRawPointer)  {
-        igSetNextWindowSizeConstraints(sizeMin, sizeMax, customCallback, customCallbackData)
+    public static func setNextWindowSizeConstraints(sizeMin: SIMD2<Float>, sizeMax: SIMD2<Float>, customCallback: @escaping ImGuiSizeCallback, customCallbackData: UnsafeMutableRawPointer)  {
+        igSetNextWindowSizeConstraints(ImVec2(sizeMin), ImVec2(sizeMax), customCallback, customCallbackData)
     }
     
-    public static func setNextWindowContentSize(size: ImVec2)  {
-        igSetNextWindowContentSize(size)
+    public static func setNextWindowContentSize(size: SIMD2<Float>)  {
+        igSetNextWindowContentSize(ImVec2(size))
     }
     
     public static func setNextWindowCollapsed(collapsed: Bool, condition: Condition = .always)  {
@@ -550,12 +616,12 @@ public final class ImGui {
         igSetNextWindowFocus()
     }
     
-    public static func setWindowPos(pos: ImVec2, condition: Condition = .always)  {
-        igSetWindowPosVec2(pos, condition.rawValue)
+    public static func setWindowPos(pos: SIMD2<Float>, condition: Condition = .always)  {
+        igSetWindowPosVec2(ImVec2(pos), condition.rawValue)
     }
     
-    public static func setWindowSize(size: ImVec2, condition: Condition = .always)  {
-        igSetWindowSizeVec2(size, condition.rawValue)
+    public static func setWindowSize(size: SIMD2<Float>, condition: Condition = .always)  {
+        igSetWindowSizeVec2(ImVec2(size), condition.rawValue)
     }
     
     public static func setWindowCollapsed(collapsed: Bool, condition: Condition = .always)  {
@@ -563,15 +629,15 @@ public final class ImGui {
     }
     
     public static func setWindowFocus()  {
-        igSetWindowFocus()
+        igSetWindowFocusNil()
     }
     
-    public static func setWindow(name: String, pos: ImVec2, condition: Condition = .always)  {
-        igSetWindowPosStr(name, pos, condition.rawValue)
+    public static func setWindow(name: String, pos: SIMD2<Float>, condition: Condition = .always)  {
+        igSetWindowPosStr(name, ImVec2(pos), condition.rawValue)
     }
     
-    public static func setWindowSize(name: String, size: ImVec2, condition: Condition = .always)  {
-        igSetWindowSizeStr(name, size, condition.rawValue)
+    public static func setWindowSize(name: String, size: SIMD2<Float>, condition: Condition = .always)  {
+        igSetWindowSizeStr(name, ImVec2(size), condition.rawValue)
     }
     
     public static func setWindowCollapsed(name: String, collapsed: Bool, condition: Condition = .always)  {
@@ -587,7 +653,7 @@ public final class ImGui {
             return igGetScrollX()
         }
         set {
-            igSetScrollX(newValue)
+            igSetScrollXFloat(newValue)
         }
     }
     
@@ -596,7 +662,7 @@ public final class ImGui {
             return igGetScrollY()
         }
         set {
-            igSetScrollY(newValue)
+            igSetScrollYFloat(newValue)
         }
     }
     
@@ -615,9 +681,13 @@ public final class ImGui {
     public static func setScrollHere(centerYRatio: Float)  {
         igSetScrollHereY(centerYRatio)
     }
+
+    public static func setScrollFromPosX(posX: Float, centerXRatio: Float)  {
+        igSetScrollFromPosXFloat(posX, centerXRatio)
+    }
     
     public static func setScrollFromPosY(posY: Float, centerYRatio: Float)  {
-        igSetScrollFromPosY(posY, centerYRatio)
+        igSetScrollFromPosYFloat(posY, centerYRatio)
     }
     
     public static func setKeyboardFocusHere(offset: Int)  {
@@ -646,8 +716,8 @@ public final class ImGui {
         igStyleColorsDark(nil)
     }
     
-    public static func pushStyleColor(idx: ImGuiCol, col: ImVec4)  {
-        igPushStyleColor(idx, col)
+    public static func pushStyleColor(idx: ImGuiCol, col: SIMD4<Float>)  {
+        igPushStyleColorVec4(idx, ImVec4(col))
     }
     
     public static func popStyleColor(count: Int)  {
@@ -658,8 +728,8 @@ public final class ImGui {
         igPushStyleVarFloat(idx, val)
     }
     
-    public static func pushStyleVar(idx: ImGuiStyleVar, val: ImVec2)  {
-        igPushStyleVarVec2(idx, val)
+    public static func pushStyleVar(idx: ImGuiStyleVar, val: SIMD2<Float>)  {
+        igPushStyleVarVec2(idx, ImVec2(val))
     }
     
     public static func popStyleVar(count: Int)  {
@@ -674,15 +744,17 @@ public final class ImGui {
         return igGetFontSize()
     }
     
-    public static func fontTexUvWhitePixel() -> ImVec2  {
-        return ImVec2(igGetFontTexUvWhitePixel())
+    public static func fontTexUvWhitePixel() -> SIMD2<Float>  {
+        var v = ImVec2()
+        igGetFontTexUvWhitePixel(&v)
+        return SIMD2(v)
     }
     
     //    public static func colorU32(idx: ImGuiCol, alphaMul: Float) -> ImU32 {
     //        return igGetColorU32(idx, alphaMul)
     //    }
     //
-    //    public static func colorU32Vec(col: ImVec4) -> ImU32 {
+    //    public static func colorU32Vec(col: SIMD4<Float>) -> ImU32 {
     //        var col = col
     //        return igGetColorU32Vec(&col)
     //    }
@@ -743,8 +815,8 @@ public final class ImGui {
         igSpacing()
     }
     
-    public static func dummy(size: ImVec2)  {
-        igDummy(size)
+    public static func dummy(size: SIMD2<Float>)  {
+        igDummy(ImVec2(size))
     }
     
     public static func indent(indentW: Float = 0.0)  {
@@ -763,12 +835,14 @@ public final class ImGui {
         igEndGroup()
     }
     
-    public static var cursorPos : ImVec2 {
+    public static var cursorPos : SIMD2<Float> {
         get {
-            return ImVec2(igGetCursorPos())
+            var v = ImVec2()
+            igGetCursorPos(&v)
+            return SIMD2(v)
         }
         set {
-            igSetCursorPos(newValue)
+            igSetCursorPos(ImVec2(newValue))
         }
     }
     
@@ -791,16 +865,20 @@ public final class ImGui {
     }
     
     
-    public static var cursorStartPos : ImVec2 {
-        return ImVec2(igGetCursorStartPos())
+    public static var cursorStartPos : SIMD2<Float> {
+        var v = ImVec2()
+        igGetCursorStartPos(&v)
+        return SIMD2(v)
     }
     
-    public static var cursorScreenPos : ImVec2 {
+    public static var cursorScreenPos : SIMD2<Float> {
         get {
-            return ImVec2(igGetCursorScreenPos())
+            var v = ImVec2()
+            igGetCursorScreenPos(&v)
+            return SIMD2(v)
         }
         set {
-            igSetCursorScreenPos(newValue)
+            igSetCursorScreenPos(ImVec2(newValue))
         }
     }
     
@@ -883,8 +961,8 @@ public final class ImGui {
         igPushIDStr(strId)
     }
     
-    public static func pushIDStrRange(strBegin: String, strEnd: String)  {
-        igPushIDRange(strBegin, strEnd)
+    public static func pushID(strBegin: String, strEnd: String)  {
+        igPushIDStrStr(strBegin, strEnd)
     }
     
     public static func pushID(identifier: AnyObject)  {
@@ -907,22 +985,21 @@ public final class ImGui {
         return igGetIDStr(strId)
     }
     
-    public static func idStrRange(strBegin: String, strEnd: String) -> ImGuiID {
-        return igGetIDRange(strBegin, strEnd)
+    public static func idStr(strBegin: String, strEnd: String) -> ImGuiID {
+        return igGetIDStrStr(strBegin, strEnd)
     }
     
     public static func idPtr(ptrId: UnsafeRawPointer) -> ImGuiID {
         return igGetIDPtr(ptrId)
     }
     
-    
     // Widgets
     public static func text(_ text: String)  {
         igText(text)
     }
     
-    public static func textColored(text: String, col: ImVec4)  {
-        igTextColored(col, text)
+    public static func textColored(text: String, col: SIMD4<Float>)  {
+        igTextColored(ImVec4(col), text)
     }
     
     public static func textDisabled(text: String)  {
@@ -949,24 +1026,24 @@ public final class ImGui {
         igBulletText(text)
     }
     
-    public static func button(label: String, size: ImVec2) -> Bool {
-        return igButton(label, size)
+    public static func button(label: String, size: SIMD2<Float>) -> Bool {
+        return igButton(label, ImVec2(size))
     }
     
     public static func smallButton(label: String) -> Bool {
         return igSmallButton(label)
     }
     
-    public static func invisibleButton(strId: String, size: ImVec2) -> Bool {
-        return igInvisibleButton(strId, size)
+    public static func invisibleButton(strId: String, size: SIMD2<Float>) -> Bool {
+        return igInvisibleButton(strId, ImVec2(size))
     }
     
-    public static func image(_ texture: UnsafeMutableRawPointer?, size: ImVec2, uv0: ImVec2 = ImVec2(repeating: 0), uv1: ImVec2 = ImVec2(repeating: 1), tintColor: ImVec4 = ImVec4(repeating: 1), borderColor: ImVec4 = ImVec4(repeating: 0)) {
-        igImage(texture, size, uv0, uv1, tintColor, borderColor)
+    public static func image(_ texture: UnsafeMutableRawPointer?, size: SIMD2<Float>, uv0: SIMD2<Float> = .zero, uv1: SIMD2<Float> = .one, tintColor: SIMD4<Float> = .one, borderColor: SIMD4<Float> = SIMD4<Float>(repeating: 0)) {
+        igImage(texture, ImVec2(size), ImVec2(uv0), ImVec2(uv1), ImVec4(tintColor), ImVec4(borderColor))
     }
     
-    public static func imageButton(_ texture: UnsafeMutableRawPointer?, size: ImVec2, uv0: ImVec2 = ImVec2(repeating: 0), uv1: ImVec2 = ImVec2(repeating: 1), framePadding: Int, backgroundColor: ImVec4, tintColor: ImVec4) -> Bool {
-        return igImageButton(texture, size, uv0, uv1, Int32(framePadding), backgroundColor, tintColor)
+    public static func imageButton(_ texture: UnsafeMutableRawPointer?, size: SIMD2<Float>, uv0: SIMD2<Float> = .zero, uv1: SIMD2<Float> = .one, framePadding: Int, backgroundColor: SIMD4<Float>, tintColor: SIMD4<Float>) -> Bool {
+        return igImageButton(texture, ImVec2(size), ImVec2(uv0), ImVec2(uv1), Int32(framePadding), ImVec4(backgroundColor), ImVec4(tintColor))
     }
     
     @discardableResult
@@ -1020,36 +1097,44 @@ public final class ImGui {
     //    }
     
     @discardableResult
-    public static func colorButton(descriptionId: String, color: ImVec4, flags: ColorEditFlags = [], size: ImVec2 = ImVec2(repeating: 0)) -> Bool {
-        return igColorButton(descriptionId, color, flags.rawValue, size)
+    public static func colorButton(descriptionId: String, color: SIMD4<Float>, flags: ColorEditFlags = [], size: SIMD2<Float> = .zero) -> Bool {
+        return igColorButton(descriptionId, ImVec4(color), flags.rawValue, ImVec2(size))
     }
     
-    public static func colorEdit3(label: String, color: inout ImVec3, flags: ColorEditFlags) -> Bool {
-        return igColorEdit3(label, &color, flags.rawValue)
+    public static func colorEdit3(label: String, color: inout SIMD3<Float>, flags: ColorEditFlags) -> Bool {
+        return withUnsafeMutablePointer(to: &color) { colorPtr in
+            return colorPtr.withMemoryRebound(to: Float.self, capacity: 3) {
+                return igColorEdit3(label, $0, flags.rawValue)
+            }
+        }
     }
     
-    public static func colorEdit4(label: String, color: inout ImVec4, flags: ColorEditFlags) -> Bool {
-        return igColorEdit4(label, &color, flags.rawValue)
+    public static func colorEdit4(label: String, color: inout SIMD4<Float>, flags: ColorEditFlags) -> Bool {
+        return withUnsafeMutablePointer(to: &color) { colorPtr in
+            return colorPtr.withMemoryRebound(to: Float.self, capacity: 4) {
+                return igColorEdit4(label, $0, flags.rawValue)
+            }
+        }
     }
     
-    public static func plotLines(label: String, values: [Float], valuesCount: Int, valuesOffset: Int, overlayText: String, scaleMin: Float, scaleMax: Float, graphSize: ImVec2, stride: Int)  {
-        igPlotLines(label, values, Int32(valuesCount), Int32(valuesOffset), overlayText, scaleMin, scaleMax, graphSize, Int32(stride))
+    public static func plotLines(label: String, values: [Float], valuesCount: Int, valuesOffset: Int, overlayText: String, scaleMin: Float, scaleMax: Float, graphSize: SIMD2<Float>, stride: Int)  {
+        igPlotLinesFloatPtr(label, values, Int32(valuesCount), Int32(valuesOffset), overlayText, scaleMin, scaleMax, ImVec2(graphSize), Int32(stride))
     }
     
     //        public static func plotLines(label: String, Float(*valuesGetter: )  {
     //            igPlotLines2(label, Float(*valuesGetter)
     //        }
     
-    public static func plotHistogram(label: String, values: [Float], valuesCount: Int, valuesOffset: Int, overlayText: String, scaleMin: Float, scaleMax: Float, graphSize: ImVec2, stride: Int)  {
-        igPlotHistogramFloatPtr(label, values, Int32(valuesCount), Int32(valuesOffset), overlayText, scaleMin, scaleMax, graphSize, Int32(stride))
+    public static func plotHistogram(label: String, values: [Float], valuesCount: Int, valuesOffset: Int, overlayText: String, scaleMin: Float, scaleMax: Float, graphSize: SIMD2<Float>, stride: Int)  {
+        igPlotHistogramFloatPtr(label, values, Int32(valuesCount), Int32(valuesOffset), overlayText, scaleMin, scaleMax, ImVec2(graphSize), Int32(stride))
     }
     
     //        public static func plotHistogram2(label: String, Float(*valuesGetter: )  {
     //        igPlotHistogram2(label, Float(*valuesGetter)
     //        }
     
-    public static func progressBar(fraction: Float, sizeArg: ImVec2, overlay: String)  {
-        igProgressBar(fraction, sizeArg, overlay)
+    public static func progressBar(fraction: Float, sizeArg: SIMD2<Float>, overlay: String)  {
+        igProgressBar(fraction, ImVec2(sizeArg), overlay)
     }
     
     // Widgets: Sliders (tip: ctrl+click on a slider to input text)
@@ -1059,18 +1144,30 @@ public final class ImGui {
     }
     
     @discardableResult
-    public static func slider(label: String, v: inout ImVec2, vMin: Float, vMax: Float, displayFormat: String, power: Float) -> Bool {
-        return igSliderFloat2(label, &v, vMin, vMax, displayFormat, power)
+    public static func slider(label: String, v: inout SIMD2<Float>, vMin: Float, vMax: Float, displayFormat: String, power: Float) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 2) {
+                return igSliderFloat2(label, $0, vMin, vMax, displayFormat, power)
+            }
+        }
     }
     
     @discardableResult
     public static func slider(label: String, v: inout ImVec3, vMin: Float, vMax: Float, displayFormat: String, power: Float) -> Bool {
-        return igSliderFloat3(label, &v, vMin, vMax, displayFormat, power)
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 3) {
+                return igSliderFloat3(label, $0, vMin, vMax, displayFormat, power)
+            }
+        }
     }
     
     @discardableResult
-    public static func slider(label: String, v: inout ImVec4, vMin: Float, vMax: Float, displayFormat: String, power: Float) -> Bool {
-        return igSliderFloat4(label, &v, vMin, vMax, displayFormat, power)
+    public static func slider(label: String, v: inout SIMD4<Float>, vMin: Float, vMax: Float, displayFormat: String, power: Float) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 4) {
+                return igSliderFloat4(label, $0, vMin, vMax, displayFormat, power)
+            }
+        }
     }
     
     @discardableResult
@@ -1087,27 +1184,39 @@ public final class ImGui {
     
     @discardableResult
     public static func slider(label: String, v: inout ImIVec2, vMin: Int32, vMax: Int32, displayFormat: String) -> Bool {
-        return igSliderInt2(label, &v, Int32(vMin), Int32(vMax), displayFormat)
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 2) {
+                return igSliderInt2(label, $0, Int32(vMin), Int32(vMax), displayFormat)
+            }
+        }
     }
     
     @discardableResult
     public static func slider(label: String, v: inout ImIVec3, vMin: Int32, vMax: Int32, displayFormat: String) -> Bool {
-        return igSliderInt3(label, &v, Int32(vMin), Int32(vMax), displayFormat)
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 3) {
+                return igSliderInt3(label, $0, Int32(vMin), Int32(vMax), displayFormat)
+            }
+        }
     }
     
     @discardableResult
     public static func slider(label: String, v: inout ImIVec4, vMin: Int32, vMax: Int32, displayFormat: String) -> Bool {
-        return igSliderInt4(label, &v, Int32(vMin), Int32(vMax), displayFormat)
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 4) {
+                return igSliderInt4(label, $0, Int32(vMin), Int32(vMax), displayFormat)
+            }
+        }
     }
     
     @discardableResult
-    public static func vSlider(label: String, size: ImVec2, v: inout [Float], vMin: Float, vMax: Float, displayFormat: String, power: Float) -> Bool {
-        return igVSliderFloat(label, size, &v, vMin, vMax, displayFormat, power)
+    public static func vSlider(label: String, size: SIMD2<Float>, v: inout [Float], vMin: Float, vMax: Float, displayFormat: String, power: Float) -> Bool {
+        return igVSliderFloat(label, ImVec2(size), &v, vMin, vMax, displayFormat, power)
     }
     
     @discardableResult
-    public static func vSlider(label: String, size: ImVec2, v: inout [Int32], vMin: Int, vMax: Int, displayFormat: String) -> Bool {
-        return igVSliderInt(label, size, &v, Int32(vMin), Int32(vMax), displayFormat)
+    public static func vSlider(label: String, size: SIMD2<Float>, v: inout [Int32], vMin: Int, vMax: Int, displayFormat: String) -> Bool {
+        return igVSliderInt(label, ImVec2(size), &v, Int32(vMin), Int32(vMax), displayFormat)
     }
     
     
@@ -1118,18 +1227,30 @@ public final class ImGui {
     }
     
     @discardableResult
-    public static func dragFloat(label: String, v: inout ImVec2, vSpeed: Float = 1.0, vMin: Float = 0.0, vMax: Float = 0.0, displayFormat: String = "%.3f", power: Float = 1.0) -> Bool {
-        return igDragFloat2(label, &v, vSpeed, vMin, vMax, displayFormat, power)
+    public static func dragFloat(label: String, v: inout SIMD2<Float>, vSpeed: Float = 1.0, vMin: Float = 0.0, vMax: Float = 0.0, displayFormat: String = "%.3f", power: Float = 1.0) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 2) {
+                return igDragFloat2(label, $0, vSpeed, vMin, vMax, displayFormat, power)
+            }
+        }
     }
     
     @discardableResult
     public static func dragFloat(label: String, v: inout ImVec3, vSpeed: Float = 1.0, vMin: Float = 0.0, vMax: Float = 0.0, displayFormat: String = "%.3f", power: Float = 1.0) -> Bool {
-        return igDragFloat3(label, &v, vSpeed, vMin, vMax, displayFormat, power)
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 3) {
+                return igDragFloat3(label, $0, vSpeed, vMin, vMax, displayFormat, power)
+            }
+        }
     }
     
     @discardableResult
-    public static func dragFloat(label: String, v: inout ImVec4, vSpeed: Float = 1.0, vMin: Float = 0.0, vMax: Float = 0.0, displayFormat: String = "%.3f", power: Float = 1.0) -> Bool {
-        return igDragFloat4(label, &v, vSpeed, vMin, vMax, displayFormat, power)
+    public static func dragFloat(label: String, v: inout SIMD4<Float>, vSpeed: Float = 1.0, vMin: Float = 0.0, vMax: Float = 0.0, displayFormat: String = "%.3f", power: Float = 1.0) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 4) {
+                return igDragFloat4(label, $0, vSpeed, vMin, vMax, displayFormat, power)
+            }
+        }
     }
     
     @discardableResult
@@ -1146,17 +1267,29 @@ public final class ImGui {
     
     @discardableResult
     public static func dragInt(label: String, v: inout ImIVec2, vSpeed: Float, vMin: Int, vMax: Int, displayFormat: String) -> Bool {
-        return igDragInt2(label, &v, vSpeed, Int32(vMin), Int32(vMax), displayFormat)
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 2) {
+                return igDragInt2(label, $0, vSpeed, Int32(vMin), Int32(vMax), displayFormat)
+            }
+        }
     }
     
     @discardableResult
     public static func dragInt(label: String, v: inout ImIVec3, vSpeed: Float, vMin: Int, vMax: Int, displayFormat: String) -> Bool {
-        return igDragInt3(label, &v, vSpeed, Int32(vMin), Int32(vMax), displayFormat)
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 3) {
+                return igDragInt3(label, $0, vSpeed, Int32(vMin), Int32(vMax), displayFormat)
+            }
+        }
     }
     
     @discardableResult
     public static func dragInt(label: String, v: inout ImIVec4, vSpeed: Float, vMin: Int, vMax: Int, displayFormat: String) -> Bool {
-        return igDragInt4(label, &v, vSpeed, Int32(vMin), Int32(vMax), displayFormat)
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 4) {
+                return igDragInt4(label, $0, vSpeed, Int32(vMin), Int32(vMax), displayFormat)
+            }
+        }
     }
     
     @discardableResult
@@ -1179,7 +1312,7 @@ public final class ImGui {
     //    }
     
     @discardableResult
-    public static func inputText(label: String, string: inout String, flags: ImGuiInputTextFlags = 0, callback: ImGuiInputTextCallback? = nil, userData: UnsafeMutableRawPointer? = nil) -> Bool {
+    public static func inputText(label: String, string: inout String, flags: InputTextFlags = [], callback: ImGuiInputTextCallback? = nil, userData: UnsafeMutableRawPointer? = nil) -> Bool {
         let bufferSize = 256
         var buffer = [CChar](repeating: 0, count: bufferSize)
         string.withCString { cString in
@@ -1188,7 +1321,7 @@ public final class ImGui {
             }
         }
         
-        let shouldUpdate = igInputText(label, &buffer, bufferSize, flags, callback, userData)
+        let shouldUpdate = igInputText(label, &buffer, bufferSize, flags.rawValue, callback, userData)
         
         if shouldUpdate {
             buffer.withUnsafeBufferPointer { buffer in
@@ -1200,8 +1333,8 @@ public final class ImGui {
     }
     
     @discardableResult
-    public static func inputTextMultiline(label: String, buf: inout [CChar], bufSize: Int, size: ImVec2, flags: ImGuiInputTextFlags, callback: @escaping ImGuiInputTextCallback, userData: UnsafeMutableRawPointer?) -> Bool {
-        return igInputTextMultiline(label, &buf, bufSize, size, flags, callback, userData)
+    public static func inputTextMultiline(label: String, buf: inout [CChar], bufSize: Int, size: SIMD2<Float>, flags: InputTextFlags, callback: @escaping ImGuiInputTextCallback, userData: UnsafeMutableRawPointer?) -> Bool {
+        return igInputTextMultiline(label, &buf, bufSize, ImVec2(size), flags.rawValue, callback, userData)
     }
     
     @discardableResult
@@ -1210,40 +1343,64 @@ public final class ImGui {
     }
     
     @discardableResult
-    public static func inputFloat(label: String, v: inout ImVec2, format: String = "%f", extraFlags: ImGuiInputTextFlags = 0) -> Bool {
-        return igInputFloat2(label, &v,format, extraFlags)
+    public static func inputFloat(label: String, v: inout SIMD2<Float>, format: String = "%f", extraFlags: InputTextFlags = []) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 2) {
+                return igInputFloat2(label, $0, format, extraFlags.rawValue)
+            }
+        }
     }
     
     @discardableResult
-    public static func inputFloat(label: String, v: inout ImVec3, format: String = "%f", extraFlags: ImGuiInputTextFlags = 0) -> Bool {
-        return igInputFloat3(label, &v, format, extraFlags)
+    public static func inputFloat(label: String, v: inout ImVec3, format: String = "%f", extraFlags: InputTextFlags = []) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 3) {
+                return igInputFloat3(label, $0, format, extraFlags.rawValue)
+            }
+        }
     }
     
     @discardableResult
-    public static func inputFloat(label: String, v: inout ImVec4, format: String = "%f", extraFlags: ImGuiInputTextFlags = 0) -> Bool {
-        return igInputFloat4(label, &v, format, extraFlags)
+    public static func inputFloat(label: String, v: inout SIMD4<Float>, format: String = "%f", extraFlags: InputTextFlags = []) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Float.self, capacity: 4) {
+                return igInputFloat4(label, $0, format, extraFlags.rawValue)
+            }
+        }
     }
     
     @discardableResult
-    public static func inputInt(label: String, v: inout Int, step: Int, stepFast: Int, extraFlags: ImGuiInputTextFlags) -> Bool {
+    public static func inputInt(label: String, v: inout Int, step: Int, stepFast: Int, extraFlags: InputTextFlags) -> Bool {
         var value = Int32(v)
         defer { v = Int(value) }
-        return igInputInt(label, &value, Int32(step), Int32(stepFast), extraFlags)
+        return igInputInt(label, &value, Int32(step), Int32(stepFast), extraFlags.rawValue)
     }
     
     @discardableResult
-    public static func inputInt(label: String, v: inout ImIVec2, extraFlags: ImGuiInputTextFlags) -> Bool {
-        return igInputInt2(label, &v, extraFlags)
+    public static func inputInt(label: String, v: inout ImIVec2, extraFlags: InputTextFlags) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 2) {
+                return igInputInt2(label, $0, extraFlags.rawValue)
+            }
+        }
     }
     
     @discardableResult
-    public static func inputInt(label: String, v: inout ImIVec3, extraFlags: ImGuiInputTextFlags) -> Bool {
-        return igInputInt3(label, &v, extraFlags)
+    public static func inputInt(label: String, v: inout ImIVec3, extraFlags: InputTextFlags) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 3) {
+                return igInputInt3(label, $0, extraFlags.rawValue)
+            }
+        }
     }
     
     @discardableResult
-    public static func inputInt(label: String, v: inout ImIVec4, extraFlags: ImGuiInputTextFlags) -> Bool {
-        return igInputInt4(label, &v, extraFlags)
+    public static func inputInt(label: String, v: inout ImIVec4, extraFlags: InputTextFlags) -> Bool {
+        return withUnsafeMutablePointer(to: &v) { vPtr in
+            return vPtr.withMemoryRebound(to: Int32.self, capacity: 4) {
+                return igInputInt4(label, $0, extraFlags.rawValue)
+            }
+        }
     }
     
     // Widgets: Trees
@@ -1292,7 +1449,7 @@ public final class ImGui {
     }
     
     public static func collapsingHeader(label: String, flags: TreeNodeFlags = []) -> Bool {
-        return igCollapsingHeader(label, flags.rawValue)
+        return igCollapsingHeaderTreeNodeFlags(label, flags.rawValue)
     }
     
     public static func collapsingHeader(label: String, pOpen: inout Bool, flags: TreeNodeFlags = []) -> Bool {
@@ -1301,12 +1458,12 @@ public final class ImGui {
     
     
     // Widgets: Selectable / Lists
-    public static func selectable(label: String, selected: Bool = false, flags: SelectableFlags = [], size: ImVec2 = ImVec2(repeating: 0)) -> Bool {
-        return igSelectable(label, selected, flags.rawValue, size)
+    public static func selectable(label: String, selected: Bool = false, flags: SelectableFlags = [], size: SIMD2<Float> = .zero) -> Bool {
+        return igSelectableBool(label, selected, flags.rawValue, ImVec2(size))
     }
     
-    public static func selectable(label: String, pSelected: inout Bool, flags: SelectableFlags = [], size: ImVec2 = ImVec2(repeating: 0)) -> Bool {
-        return igSelectableBoolPtr(label, &pSelected, flags.rawValue, size)
+    public static func selectable(label: String, pSelected: inout Bool, flags: SelectableFlags = [], size: SIMD2<Float> = .zero) -> Bool {
+        return igSelectableBoolPtr(label, &pSelected, flags.rawValue, ImVec2(size))
     }
     
     public static func listBox(label: String, currentItem: inout Int, items: [String], itemsCount: Int, heightInItems: Int) -> Bool {
@@ -1323,8 +1480,8 @@ public final class ImGui {
     //        return igListBox2(label, currentItem, Bool(*itemsGetter)
     //        }
     
-    public static func listBoxHeader(label: String, size: ImVec2) -> Bool {
-        return igListBoxHeaderVec2(label, size)
+    public static func listBoxHeader(label: String, size: SIMD2<Float>) -> Bool {
+        return igListBoxHeaderVec2(label, ImVec2(size))
     }
     
     public static func listBoxHeader2(label: String, itemsCount: Int, heightInItems: Int) -> Bool {
@@ -1462,8 +1619,8 @@ public final class ImGui {
     
     
     // Clipping
-    public static func pushClipRect(clipRectMin: ImVec2, clipRectMax: ImVec2, IntersectWithCurrentClipRect: Bool)  {
-        igPushClipRect(clipRectMin, clipRectMax, IntersectWithCurrentClipRect)
+    public static func pushClipRect(clipRectMin: SIMD2<Float>, clipRectMax: SIMD2<Float>, IntersectWithCurrentClipRect: Bool)  {
+        igPushClipRect(ImVec2(clipRectMin), ImVec2(clipRectMax), IntersectWithCurrentClipRect)
     }
     
     public static func popClipRect()  {
@@ -1504,16 +1661,22 @@ public final class ImGui {
         return igIsAnyItemActive()
     }
     
-    public static var itemRectMin : ImVec2 {
-        return ImVec2(igGetItemRectMin())
+    public static var itemRectMin : SIMD2<Float> {
+        var v = ImVec2()
+        igGetItemRectMin(&v)
+        return SIMD2(v)
     }
     
-    public static var itemRectMax : ImVec2 {
-        return ImVec2(igGetItemRectMax())
+    public static var itemRectMax : SIMD2<Float> {
+        var v = ImVec2()
+        igGetItemRectMax(&v)
+        return SIMD2(v)
     }
     
-    public static var itemRectSize : ImVec2 {
-        return ImVec2(igGetItemRectSize())
+    public static var itemRectSize : SIMD2<Float> {
+        var v = ImVec2()
+        igGetItemRectSize(&v)
+        return SIMD2(v)
     }
     
     public static func setItemAllowOverlap()  {
@@ -1528,8 +1691,8 @@ public final class ImGui {
         return igIsWindowFocused(flags.rawValue)
     }
     
-    public static func isRectVisible(itemSize: ImVec2) -> Bool {
-        return igIsRectVisible(itemSize)
+    public static func isRectVisible(itemSize: SIMD2<Float>) -> Bool {
+        return igIsRectVisibleNil(ImVec2(itemSize))
     }
     
     public static var time : Double {
@@ -1544,8 +1707,10 @@ public final class ImGui {
         return String(cString: igGetStyleColorName(idx))
     }
     
-    public static func calcTextSize(text: String, textEnd: String, hideTextAfterDoubleHash: Bool, wrapWidth: Float) -> ImVec2 {
-        return ImVec2(igCalcTextSize(text, textEnd, hideTextAfterDoubleHash, wrapWidth))
+    public static func calcTextSize(text: String, textEnd: String, hideTextAfterDoubleHash: Bool, wrapWidth: Float) -> SIMD2<Float> {
+        var v = ImVec2()
+        igCalcTextSize(&v, text, textEnd, hideTextAfterDoubleHash, wrapWidth)
+        return SIMD2(v)
     }
     
     public static func calcListClipping(itemsCount: Int, itemsHeight: Float) -> Range<Int>  {
@@ -1556,8 +1721,8 @@ public final class ImGui {
     }
     
     
-    public static func beginChildFrame(id: ImGuiID, size: ImVec2, extraFlags: ImGuiWindowFlags) -> Bool {
-        return igBeginChildFrame(id, size, extraFlags)
+    public static func beginChildFrame(id: ImGuiID, size: SIMD2<Float>, extraFlags: ImGuiWindowFlags) -> Bool {
+        return igBeginChildFrame(id, ImVec2(size), extraFlags)
     }
     
     public static func endChildFrame()  {
@@ -1565,12 +1730,14 @@ public final class ImGui {
     }
     
     
-    public static func colorConvertU32ToFloat4(_ in: ImU32) -> ImVec4 {
-        return ImVec4(igColorConvertU32ToFloat4(`in`))
+    public static func colorConvertU32ToFloat4(_ in: ImU32) -> SIMD4<Float> {
+        var v = ImVec4()
+        igColorConvertU32ToFloat4(&v, `in`)
+        return SIMD4(v)
     }
     
-    public static func colorConvertFloat4ToU32(_ color: ImVec4) -> ImU32 {
-        return igColorConvertFloat4ToU32(color)
+    public static func colorConvertFloat4ToU32(_ color: SIMD4<Float>) -> ImU32 {
+        return igColorConvertFloat4ToU32(ImVec4(color))
     }
     
     public static func colorConvertRGBtoHSV(r: Float, g: Float, b: Float) -> (h: Float, s: Float, v: Float) {
@@ -1622,24 +1789,30 @@ public final class ImGui {
         return igIsMouseReleased(Int32(button))
     }
     
-    public static func isMouseHoveringRect(rMin: ImVec2, rMax: ImVec2, clip: Bool) -> Bool {
-        return igIsMouseHoveringRect(rMin, rMax, clip)
+    public static func isMouseHoveringRect(rMin: SIMD2<Float>, rMax: SIMD2<Float>, clip: Bool) -> Bool {
+        return igIsMouseHoveringRect(ImVec2(rMin), ImVec2(rMax), clip)
     }
     
     public static func isMouseDragging(button: Int, lockThreshold: Float = -1.0) -> Bool {
         return igIsMouseDragging(Int32(button), lockThreshold)
     }
     
-    public static var mousePos : ImVec2  {
-        return ImVec2(igGetMousePos())
+    public static var mousePos : SIMD2<Float>  {
+        var v = ImVec2()
+        igGetMousePos(&v)
+        return SIMD2(v)
     }
     
-    public static var mousePosOnOpeningCurrentPopup : ImVec2 {
-        return ImVec2(igGetMousePosOnOpeningCurrentPopup())
+    public static var mousePosOnOpeningCurrentPopup : SIMD2<Float> {
+        var v = ImVec2()
+        igGetMousePosOnOpeningCurrentPopup(&v)
+        return SIMD2(v)
     }
     
-    public static func mouseDragDelta(button: Int, lockThreshold: Float) -> ImVec2 {
-        return ImVec2(igGetMouseDragDelta(Int32(button), lockThreshold))
+    public static func mouseDragDelta(button: Int, lockThreshold: Float) -> SIMD2<Float> {
+        var v = ImVec2()
+        igGetMouseDragDelta(&v, Int32(button), lockThreshold)
+        return SIMD2(v)
     }
     
     public static func resetMouseDragDelta(button: Int)  {
@@ -1720,11 +1893,11 @@ public extension ImGui {
         public let vertexBuffer : UnsafeMutableBufferPointer<ImDrawVert>
         public let indexBuffer : UnsafeMutableBufferPointer<ImDrawIdx>
         public let drawCommands : [DrawCommand]
-        public let displayPosition : ImVec2
-        public let displaySize : ImVec2
+        public let displayPosition : SIMD2<Float>
+        public let displaySize : SIMD2<Float>
         public let clipScaleFactor : Float
         
-        init(vertexBuffer: UnsafeMutableBufferPointer<ImDrawVert>, indexBuffer: UnsafeMutableBufferPointer<ImDrawIdx>, drawCommands : [DrawCommand], displayPosition: ImVec2, displaySize: ImVec2, clipScaleFactor: Float) {
+        init(vertexBuffer: UnsafeMutableBufferPointer<ImDrawVert>, indexBuffer: UnsafeMutableBufferPointer<ImDrawIdx>, drawCommands : [DrawCommand], displayPosition: SIMD2<Float>, displaySize: SIMD2<Float>, clipScaleFactor: Float) {
             self.vertexBuffer = vertexBuffer
             self.indexBuffer = indexBuffer
             self.drawCommands = drawCommands
@@ -1747,7 +1920,7 @@ public extension ImGui {
     
     static func renderData(drawData: UnsafeMutablePointer<ImDrawData>, clipScale: Float) -> RenderData {
         if clipScale != 1.0 {
-            drawData.pointee.scaleClipRects(by: ImVec2(repeating: clipScale))
+            drawData.pointee.scaleClipRects(by: SIMD2<Float>(repeating: clipScale))
         }
         
         let vertexBufferCount = Int(drawData.pointee.TotalVtxCount)
@@ -1788,8 +1961,8 @@ public extension ImGui {
             drawCommand.indexBufferByteOffset = indexBufferOffset * MemoryLayout<ImDrawIdx>.stride
         }
         
-        let displayPosition = ImVec2(drawData.pointee.DisplayPos)
-        let displaySize = ImVec2(drawData.pointee.DisplaySize.x, drawData.pointee.DisplaySize.y)
+        let displayPosition = SIMD2<Float>(drawData.pointee.DisplayPos)
+        let displaySize = SIMD2<Float>(drawData.pointee.DisplaySize.x, drawData.pointee.DisplaySize.y)
         
         return RenderData(vertexBuffer: vertexBuffer, indexBuffer: indexBuffer, drawCommands: drawCommands, displayPosition: displayPosition, displaySize: displaySize, clipScaleFactor: clipScale)
     }

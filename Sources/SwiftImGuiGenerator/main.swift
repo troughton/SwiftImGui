@@ -1,11 +1,11 @@
 import Foundation
 
-struct CImGuiArgument : Codable {
+struct CImGuiArgument : Decodable {
     var name : String
-    var type : String
+    var type : CType
 }
 
-struct CImGuiFunction : Codable {
+struct CImGuiFunction : Decodable {
     var args : String
     var argsT : [CImGuiArgument]
     var call_args : String
@@ -15,23 +15,10 @@ struct CImGuiFunction : Codable {
     var defaults : [String : String]
     var funcname : String?
     var ov_cimguiname : String
-    var ret : String?
+    var ret : CType?
     var signature : String
     var stname : String // The type on which this method belongs; may be empty for a free function.
     var namespace : String?
-}
-
-func toSwiftType(_ typename: String) -> String {
-    switch typename {
-    case "const char*":
-        return "String"
-    case "unsigned int":
-        return "UInt32"
-    case _ where typename.suffix(1) == "*":
-        return "inout " + toSwiftType(String(typename.dropLast()))
-    default:
-        return typename.prefix(1).uppercased() + typename.dropFirst()
-    }
 }
 
 func toSwiftParameterName(_ parameterName: String) -> String {
@@ -42,21 +29,8 @@ func toSwiftParameterName(_ parameterName: String) -> String {
         .joined()
 }
 
-func toSwiftFunctionName(_ functionName: String) -> String {
+func toSwiftFunctionName<S: StringProtocol>(_ functionName: S) -> String {
     return functionName.prefix(1).lowercased() + functionName.dropFirst()
-}
-
-func toSwiftDefaultValue(_ defaultValue: String) -> String {
-    switch defaultValue {
-    case "FLT_MAX":
-        return ".greatestFiniteMagnitude"
-    case "((void*)0)":
-        return "\"\""
-    case _ where defaultValue.suffix(1) == "f":
-        return String(defaultValue.dropLast())
-    default:
-        return defaultValue
-    }
 }
 
 func printFunction(_ function: CImGuiFunction, indent: String) {
@@ -70,13 +44,18 @@ func printFunction(_ function: CImGuiFunction, indent: String) {
         print(function.namespace != nil ? indent + "public static func " : indent + "public func", terminator: "")
         print(toSwiftFunctionName(function.funcname!), terminator: "(")
         for (i, arg) in function.argsT.enumerated() {
-            var argument = "\(toSwiftParameterName(arg.name)): \(toSwiftType(arg.type))"
-            if let defaultValue = function.defaults[arg.name] {
-                argument += " = \(toSwiftDefaultValue(defaultValue))"
+            var arg = arg
+            
+            // Translating the default value can mutate arg.type, so we need to do it early.
+            let defaultValueStr = function.defaults[arg.name].map { arg.type.translateDefaultValue($0) }
+            
+            var argument = "\(toSwiftParameterName(arg.name)): \(arg.type.nameInArgumentPosition)"
+            if let defaultValueStr = defaultValueStr {
+                argument += " = \(defaultValueStr)"
             }
             print(argument, terminator: i == function.argsT.count - 1 ? "" : ", ")
         }
-        print(") \(function.ret.map { "-> \(toSwiftType($0))" } ?? "") {")
+        print(") \(function.ret.map { "-> \($0.name)" } ?? "") {")
         
         let parameters = function.argsT.map { toSwiftParameterName($0.name) }.joined(separator: ", ")
         print(indent + "    return \(function.ov_cimguiname)(\(parameters))")
@@ -84,17 +63,31 @@ func printFunction(_ function: CImGuiFunction, indent: String) {
     }
 }
 
-let json = try! Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[1]))
+let directory = URL(fileURLWithPath: CommandLine.arguments[1])
 
 let decoder = JSONDecoder()
-let imguiDefinitions = try decoder.decode([String : [CImGuiFunction]].self, from: json)
+
+let typedefs = try decoder.decode([String: String].self, from: try! Data(contentsOf: directory.appendingPathComponent("typedefs_dict.json")))
+for (typedefName, typeName) in typedefs {
+    if typedefName.contains("Flags") { continue }
+    if let type = CType(string: typeName, addToDictIfMissing: false) {
+        CType.knownTypes[typedefName] = CType(string: typeName)
+    }
+}
+
+let structsAndEnums = try decoder.decode(ImGuiStructsAndEnums.self, from: try! Data(contentsOf: directory.appendingPathComponent("structs_and_enums.json")))
+
+for (enumName, enumMembers) in structsAndEnums.enums {
+    print(structsAndEnums.printEnum(name: enumName, members: enumMembers))
+}
+
+let imguiDefinitions = try decoder.decode([String : [CImGuiFunction]].self, from: try! Data(contentsOf: directory.appendingPathComponent("definitions.json")))
 
 var namespaces = [String : [CImGuiFunction]]()
 var types = [String : [CImGuiFunction]]()
 
 for (name, functions) in imguiDefinitions {
     for function in functions {
-        if function.
         if let namespace = function.namespace {
             namespaces[namespace, default: []].append(function)
         } else {
