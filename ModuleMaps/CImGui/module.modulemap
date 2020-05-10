@@ -1,0 +1,4 @@
+module CImGui {
+    umbrella header "../../Sources/CImGui/include/cimgui.h"
+    export *
+}

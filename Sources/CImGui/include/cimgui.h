@@ -2964,7 +2964,6 @@ CIMGUI_API bool igIsNavInputTest(ImGuiNavInput n,ImGuiInputReadMode rm);
 CIMGUI_API ImGuiKeyModFlags igGetMergedKeyModFlags(void);
 CIMGUI_API void igDockContextInitialize(ImGuiContext* ctx);
 CIMGUI_API void igDockContextShutdown(ImGuiContext* ctx);
-CIMGUI_API void igDockContextOnLoadSettings(ImGuiContext* ctx);
 CIMGUI_API void igDockContextRebuildNodes(ImGuiContext* ctx);
 CIMGUI_API void igDockContextUpdateUndocking(ImGuiContext* ctx);
 CIMGUI_API void igDockContextUpdateDocking(ImGuiContext* ctx);

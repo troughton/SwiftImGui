@@ -3633,10 +3633,6 @@ CIMGUI_API void igDockContextShutdown(ImGuiContext* ctx)
 {
     return ImGui::DockContextShutdown(ctx);
 }
-CIMGUI_API void igDockContextOnLoadSettings(ImGuiContext* ctx)
-{
-    return ImGui::DockContextOnLoadSettings(ctx);
-}
 CIMGUI_API void igDockContextRebuildNodes(ImGuiContext* ctx)
 {
     return ImGui::DockContextRebuildNodes(ctx);
