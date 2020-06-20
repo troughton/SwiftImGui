@@ -2095,7 +2095,6 @@ namespace ImGui
     // (some functions are only declared in imgui.cpp, see Docking section)
     IMGUI_API void          DockContextInitialize(ImGuiContext* ctx);
     IMGUI_API void          DockContextShutdown(ImGuiContext* ctx);
-    IMGUI_API void          DockContextOnLoadSettings(ImGuiContext* ctx);
     IMGUI_API void          DockContextRebuildNodes(ImGuiContext* ctx);
     IMGUI_API void          DockContextUpdateUndocking(ImGuiContext* ctx);
     IMGUI_API void          DockContextUpdateDocking(ImGuiContext* ctx);
