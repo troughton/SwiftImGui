@@ -1637,7 +1637,7 @@ public final class ImGui {
         return io.pointee.WantCaptureKeyboard
     }
     
-    public static func isItemHovered(flags: HoveredFlags) -> Bool {
+    public static func isItemHovered(flags: HoveredFlags = []) -> Bool {
         return igIsItemHovered(flags.rawValue)
     }
     
