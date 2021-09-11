@@ -33,7 +33,8 @@ struct ImGuiStructsAndEnums: Decodable {
             
             \(members.compactMap { member in
             if member.name.hasSuffix("_COUNT") { return nil }
-            return "public static let \(toSwiftFunctionName(member.name.split(separator: "_").last!)) = \(typeName)(rawValue: \(member.calc_value))"
+            if member.calc_value == 0 { return nil }
+            return "public static var \(toSwiftFunctionName(member.name.split(separator: "_").last!)): \(typeName) { \(typeName)(rawValue: \(member.calc_value)) }"
             }.joined(separator: "\n    "))
         }
         """

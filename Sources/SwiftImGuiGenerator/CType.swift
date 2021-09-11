@@ -193,7 +193,7 @@ indirect enum CType: Decodable {
             } else if case .struct = cType {
                 return "OpaquePointer"
             }
-            return "UnsafePointer<\(cType.name)>"
+            return "UnsafePointer<\(cType.name)>?"
         case .pointer(let cType):
             if case .void = cType {
                 return "UnsafeMutableRawPointer"
@@ -233,6 +233,8 @@ indirect enum CType: Decodable {
         case (.pointer, "((void*)0)"),
              (.constPointer, "((void*)0)"):
             self = .optional(self)
+            return "nil"
+        case (_, "NULL"):
             return "nil"
         default:
             return defaultValue

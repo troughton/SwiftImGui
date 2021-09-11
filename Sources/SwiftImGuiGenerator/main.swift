@@ -19,6 +19,12 @@ struct CImGuiFunction : Decodable {
     var signature : String
     var stname : String // The type on which this method belongs; may be empty for a free function.
     var namespace : String?
+    
+    var isComputedVariable: Bool {
+        return self.argsT.lazy.filter { $0.name != "self" }.isEmpty &&
+        (self.ret.map { $0.name != "Void" } ?? false) &&
+        (self.funcname.map { $0.starts(with: "Is") || $0.starts(with: "Has") } ?? false)
+    }
 }
 
 func toSwiftParameterName(_ parameterName: String) -> String {
@@ -41,21 +47,33 @@ func printFunction(_ function: CImGuiFunction, indent: String) {
     } else if function.funcname!.lowercased().prefix(3) == "get" {
         
     } else {
-        print(function.namespace != nil ? indent + "public static func " : indent + "public func", terminator: "")
-        print(toSwiftFunctionName(function.funcname!), terminator: "(")
-        for (i, arg) in function.argsT.enumerated() {
-            var arg = arg
+        let isComputedVar = function.isComputedVariable
+        
+        if isComputedVar {
+            print(function.namespace != nil ? indent + "public static var " : indent + "public var ", terminator: "")
+            print(toSwiftFunctionName(function.funcname!), terminator: " \(function.ret.map { ": \($0.name)" } ?? "") {\n")
+        } else {
+            print(function.namespace != nil ? indent + "public static func " : indent + "public func ", terminator: "")
+            print(toSwiftFunctionName(function.funcname!), terminator: "(")
             
-            // Translating the default value can mutate arg.type, so we need to do it early.
-            let defaultValueStr = function.defaults[arg.name].map { arg.type.translateDefaultValue($0) }
-            
-            var argument = "\(toSwiftParameterName(arg.name)): \(arg.type.nameInArgumentPosition)"
-            if let defaultValueStr = defaultValueStr {
-                argument += " = \(defaultValueStr)"
+            for (i, arg) in function.argsT.enumerated() {
+                if function.namespace == nil, arg.name == "self" {
+                    continue
+                }
+                var arg = arg
+                
+                // Translating the default value can mutate arg.type, so we need to do it early.
+                let defaultValueStr = function.defaults[arg.name].map { arg.type.translateDefaultValue($0) }
+                
+                var argument = "\(toSwiftParameterName(arg.name)): \(arg.type.nameInArgumentPosition)"
+                if let defaultValueStr = defaultValueStr {
+                    argument += " = \(defaultValueStr)"
+                }
+                print(argument, terminator: i == function.argsT.count - 1 ? "" : ", ")
             }
-            print(argument, terminator: i == function.argsT.count - 1 ? "" : ", ")
+            print(") \(function.ret.map { "-> \($0.name)" } ?? "") {")
+            
         }
-        print(") \(function.ret.map { "-> \($0.name)" } ?? "") {")
         
         let parameters = function.argsT.map { toSwiftParameterName($0.name) }.joined(separator: ", ")
         print(indent + "    return \(function.ov_cimguiname)(\(parameters))")
@@ -78,7 +96,7 @@ for (typedefName, typeName) in typedefs {
 let structsAndEnums = try decoder.decode(ImGuiStructsAndEnums.self, from: try! Data(contentsOf: directory.appendingPathComponent("structs_and_enums.json")))
 
 for (enumName, enumMembers) in structsAndEnums.enums {
-    print(structsAndEnums.printEnum(name: enumName, members: enumMembers))
+    print(structsAndEnums.printEnum(name: enumName, members: enumMembers), terminator: "\n\n")
 }
 
 let imguiDefinitions = try decoder.decode([String : [CImGuiFunction]].self, from: try! Data(contentsOf: directory.appendingPathComponent("definitions.json")))
@@ -104,10 +122,10 @@ for (namespace, functions) in namespaces {
     print("}\n")
 }
 
-//for (type, functions) in types {
-//    print("public extension \(type) {")
-//    for function in functions {
-//        printFunction(function, indent: "    ")
-//    }
-//    print("}\n")
-//}
+for (type, functions) in types {
+    print("extension \(type) {")
+    for function in functions {
+        printFunction(function, indent: "    ")
+    }
+    print("}\n")
+}
