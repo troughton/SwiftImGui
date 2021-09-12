@@ -21,7 +21,7 @@ struct ImGuiStructsAndEnums: Decodable {
     var enums: [String: [ImGuiEnumMember]]
     var structs: [String: [ImGuiStructMember]]
     
-    func printEnum(name: String, members: [ImGuiEnumMember]) -> String {
+    func printEnum(to reflectionPrinter: inout ReflectionPrinter, name: String, members: [ImGuiEnumMember]) {
         let typeName = name.replacingOccurrences(of: "_", with: "")
         let result = """
         public struct \(typeName): OptionSet {
@@ -38,7 +38,7 @@ struct ImGuiStructsAndEnums: Decodable {
             }.joined(separator: "\n    "))
         }
         """
-        return result
+        reflectionPrinter.print(result)
     }
 }
 
