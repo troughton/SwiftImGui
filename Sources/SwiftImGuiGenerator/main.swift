@@ -53,7 +53,20 @@ func toSwiftParameterName<S: StringProtocol>(_ parameterName: S) -> String {
     default:
         return parameterName.lowercased()
             .split(separator: "_")
-            .map { $0 == "buf" ? "buffer" : $0}
+            .map { comp -> String in
+                switch comp {
+                case "buf":
+                    return "buffer"
+                case "desc":
+                    return "description"
+                case "col":
+                    return "color"
+                case "bg":
+                    return "background"
+                default:
+                    return String(comp)
+                }
+            }
             .enumerated()
             .map { $0.offset > 0 ? $0.element.capitalized : String($0.element) }
             .joined()
@@ -125,43 +138,6 @@ reflectionPrinter.print(
 """
 import CImGui
 
-func scan<
-    S : Sequence, U
-    >(_ seq: S, _ initial: U, _ combine: (U, S.Iterator.Element) -> U) -> [U] {
-    var result: [U] = []
-    result.reserveCapacity(seq.underestimatedCount)
-    var runningResult = initial
-    for element in seq {
-        runningResult = combine(runningResult, element)
-        result.append(runningResult)
-    }
-    return result
-}
-
-func withArrayOfCStrings<R>(
-    _ args: [String], _ body: ([UnsafePointer<CChar>?]) -> R
-) -> R {
-    let argsCounts = Array(args.map { $0.utf8.count + 1 })
-    let argsOffsets = [ 0 ] + scan(argsCounts, 0, +)
-    let argsBufferSize = argsOffsets.last!
-    
-    var argsBuffer: [UInt8] = []
-    argsBuffer.reserveCapacity(argsBufferSize)
-    for arg in args {
-        argsBuffer.append(contentsOf: arg.utf8)
-        argsBuffer.append(0)
-    }
-    
-    return argsBuffer.withUnsafeMutableBufferPointer {
-        (argsBuffer) in
-        let ptr = UnsafeMutableRawPointer(argsBuffer.baseAddress!).bindMemory(
-            to: CChar.self, capacity: argsBuffer.count)
-        var cStrings: [UnsafeMutablePointer<CChar>?] = argsOffsets.map { ptr + $0 }
-        cStrings[cStrings.count - 1] = nil
-        return body(cStrings)
-    }
-}
-
 extension SIMD2 where Scalar == Float {
     @inlinable
     init(_ imVec: ImVec2) {
@@ -229,6 +205,27 @@ for (name, functions) in imguiDefinitions.sorted(by: { $0.key < $1.key }) {
     }
 }
 
+func processSettersInFunctionList(_ functionList: [ImGuiFunction]) {
+    let functionsByName = Dictionary(functionList.lazy.filter { $0.isComputedVariable }.map { ($0.name.lowercased(), $0) }, uniquingKeysWith: { a, b in a })
+    for function in functionList {
+        if function.arguments.count == 1,
+           case .normal(.void) = function.returnType,
+            function.name.starts(with: "set"),
+            let getter = functionsByName[function.name.dropFirst(3).lowercased()] {
+            getter.setterFunction = function
+            function.isComputedVariable = true
+        }
+    }
+}
+
+for functionList in namespaces.values {
+    processSettersInFunctionList(functionList)
+}
+
+for functionList in types.values {
+    processSettersInFunctionList(functionList)
+}
+
 for (namespace, functions) in namespaces.sorted(by: { $0.key < $1.key }) {
     reflectionPrinter.print("public enum \(namespace) {")
     
@@ -252,163 +249,6 @@ for (type, functions) in types.sorted(by: { $0.key < $1.key }) {
     reflectionPrinter.print("}")
     reflectionPrinter.newLine()
 }
-
-reflectionPrinter.print(
-"""
-extension ImGui {
-    public final class RenderData {
-        public let vertexBuffer : UnsafeMutableBufferPointer<ImDrawVert>
-        public let indexBuffer : UnsafeMutableBufferPointer<ImDrawIdx>
-        public let drawCommands : [DrawCommand]
-        public let displayPosition : SIMD2<Float>
-        public let displaySize : SIMD2<Float>
-        public let clipScaleFactor : Float
-        
-        init(vertexBuffer: UnsafeMutableBufferPointer<ImDrawVert>, indexBuffer: UnsafeMutableBufferPointer<ImDrawIdx>, drawCommands : [DrawCommand], displayPosition: SIMD2<Float>, displaySize: SIMD2<Float>, clipScaleFactor: Float) {
-            self.vertexBuffer = vertexBuffer
-            self.indexBuffer = indexBuffer
-            self.drawCommands = drawCommands
-            self.displayPosition = displayPosition
-            self.displaySize = displaySize
-            self.clipScaleFactor = clipScaleFactor
-        }
-        
-        deinit {
-            self.vertexBuffer.baseAddress?.deallocate()
-            self.indexBuffer.baseAddress?.deallocate()
-        }
-    }
-    
-    public struct DrawCommand {
-        public var vertexBufferByteOffset = 0
-        public var indexBufferByteOffset = 0
-        public var subCommands = [ImDrawCmd]()
-    }
-    
-    public struct DrawList {
-        private let imList : UnsafeMutablePointer<ImDrawList>
-        
-        init(_ imList: UnsafeMutablePointer<ImDrawList>) {
-            self.imList = imList
-        }
-        
-        public var vertexBufferSize : Int {
-            return Int(imList.pointee.VtxBuffer.Size)
-        }
-        
-        public subscript(vertex n: Int) -> ImDrawVert {
-            get {
-                return imList.pointee.VtxBuffer.Data[n]
-            }
-            set {
-                imList.pointee.VtxBuffer.Data[n] = newValue
-            }
-        }
-        
-        public subscript(vertexPtr n: Int) -> UnsafeMutablePointer<ImDrawVert> {
-            return imList.pointee.VtxBuffer.Data.advanced(by: n)
-        }
-        
-        public var indexBufferSize : Int {
-            return Int(self.imList.pointee.IdxBuffer.Size)
-        }
-        
-        public subscript(index n: Int) -> ImDrawIdx {
-            get {
-                return self.imList.pointee.IdxBuffer.Data[n]
-            }
-            set {
-                self.imList.pointee.IdxBuffer.Data[n] = newValue
-            }
-        }
-        
-        public subscript(indexPtr n: Int) -> UnsafeMutablePointer<ImDrawIdx> {
-            return self.imList.pointee.IdxBuffer.Data.advanced(by: n)
-        }
-        
-        public var commandSize : Int {
-            return Int(self.imList.pointee.CmdBuffer.Size)
-        }
-        
-        public subscript(command n: Int) -> ImDrawCmd {
-            get {
-                return self.imList.pointee.CmdBuffer.Data[n]
-            }
-            set {
-                self.imList.pointee.CmdBuffer.Data[n] = newValue
-            }
-        }
-        
-        public func addText(_ text: String, position: SIMD2<Float>, color: SIMD4<Float>) {
-            self.addText(text, position: position, color: ImGui.colorConvertFloat4ToU32(color))
-        }
-        
-        public func addText(_ text: String, position: SIMD2<Float>, color: UInt32) {
-            text.withCString { text in
-                self.addText(text, position: position, color: color)
-            }
-        }
-        
-        public func addText(_ text: UnsafePointer<CChar>, position: SIMD2<Float>, color: UInt32) {
-            ImDrawList_AddText_Vec2(self.imList, ImVec2(position), color, text, text + strlen(text))
-        }
-        
-        public func clearFreeMemory() {
-            ImDrawList__ClearFreeMemory(self.imList)
-        }
-    }
-    
-    public static func renderData(drawData: UnsafeMutablePointer<ImDrawData>, clipScale: Float) -> RenderData {
-        if clipScale != 1.0 {
-            drawData.pointee.scaleClipRects(fbScale: SIMD2<Float>(repeating: clipScale))
-        }
-        
-        let vertexBufferCount = Int(drawData.pointee.TotalVtxCount)
-        let indexBufferCount = Int(drawData.pointee.TotalIdxCount)
-        
-        let vertexBuffer = UnsafeMutableBufferPointer(start: UnsafeMutablePointer<ImDrawVert>.allocate(capacity: vertexBufferCount), count: vertexBufferCount)
-        let indexBuffer = UnsafeMutableBufferPointer(start: UnsafeMutablePointer<ImDrawIdx>.allocate(capacity: indexBufferCount), count: indexBufferCount)
-        
-        var drawCommands : [DrawCommand] = []
-        
-        var vertexBufferOffset = 0
-        var indexBufferOffset = 0
-        
-        var drawCommand = DrawCommand()
-        
-        // Render command lists
-        for n in 0..<Int(drawData.pointee.CmdListsCount) {
-            let cmdList = ImGui.DrawList(drawData.pointee.CmdLists[n]!)
-            
-            let vertexBufferSize = cmdList.vertexBufferSize
-            let indexBufferSize = cmdList.indexBufferSize
-            
-            vertexBuffer.baseAddress!.advanced(by: vertexBufferOffset).initialize(from: cmdList[vertexPtr: 0], count: vertexBufferSize)
-            indexBuffer.baseAddress!.advanced(by: indexBufferOffset).initialize(from: cmdList[indexPtr: 0], count: indexBufferSize)
-            
-            for cmdI in 0..<cmdList.commandSize {
-                let pcmd = cmdList[command: cmdI]
-                drawCommand.subCommands.append(pcmd)
-            }
-            
-            drawCommands.append(drawCommand)
-            
-            vertexBufferOffset += vertexBufferSize
-            indexBufferOffset += indexBufferSize
-            
-            drawCommand = DrawCommand()
-            drawCommand.vertexBufferByteOffset = vertexBufferOffset * MemoryLayout<ImDrawVert>.stride
-            drawCommand.indexBufferByteOffset = indexBufferOffset * MemoryLayout<ImDrawIdx>.stride
-        }
-        
-        let displayPosition = SIMD2<Float>(drawData.pointee.DisplayPos)
-        let displaySize = SIMD2<Float>(drawData.pointee.DisplaySize.x, drawData.pointee.DisplaySize.y)
-        
-        return RenderData(vertexBuffer: vertexBuffer, indexBuffer: indexBuffer, drawCommands: drawCommands, displayPosition: displayPosition, displaySize: displaySize, clipScaleFactor: clipScale)
-    }
-}
-
-""")
 
 try! reflectionPrinter.write(to: URL(fileURLWithPath: "/Users/Thomas/troughton Repositories/SwiftImGui/Sources/ImGui/ImGui.swift"))
 print(reflectionPrinter.buffer)

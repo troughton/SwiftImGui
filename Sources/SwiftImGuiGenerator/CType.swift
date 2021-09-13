@@ -121,6 +121,8 @@ indirect enum CType: Decodable {
     case variadic
     case vaList
     
+    case intArgument // int32 for C, Int for Swift
+    
     case imVec2
     case imVec4
     case vector(element: CType, length: Int)
@@ -280,6 +282,8 @@ indirect enum CType: Decodable {
             return "SIMD2<Float>"
         case .imVec4:
             return "SIMD4<Float>"
+        case .intArgument:
+            return "Int"
         default:
             let name = self.cTypeName(in: namespace)
             if name.hasSuffix("Func") || name.hasSuffix("Callback") {
@@ -307,7 +311,7 @@ indirect enum CType: Decodable {
             return "Int16"
         case .uint16:
             return "UInt16"
-        case .int32:
+        case .int32, .intArgument:
             return "Int32"
         case .uint32:
             return "UInt32"
@@ -388,6 +392,8 @@ indirect enum CType: Decodable {
     
     var hasDifferingSwiftType: Bool {
         switch self {
+        case .intArgument:
+            return true
         case .constPointer(to: .char),
                 .pointer(to: .char),
                 .imVec2,
@@ -414,6 +420,8 @@ indirect enum CType: Decodable {
                 return "SIMD2<Float>(\(inputValue))"
             case .imVec4:
                 return "SIMD4<Float>(\(inputValue))"
+            case .intArgument:
+                return "Int(\(inputValue))"
             case .struct(let type):
                 return "\(type.name)(rawValue: \(inputValue))"
             default:
@@ -432,6 +440,8 @@ indirect enum CType: Decodable {
                 return "ImVec4(\(inputValue))"
             case .struct:
                 return "\(inputValue).rawValue"
+            case .intArgument:
+                return "Int32(\(inputValue))"
             default:
                 break
             }
@@ -465,7 +475,7 @@ indirect enum CType: Decodable {
             self = .optional(self)
             return "nil"
         case (_, "sizeof(float)"):
-            return "Int32(MemoryLayout<Float>.stride)"
+            return "MemoryLayout<Float>.stride"
         case (.imVec2, _), (.imVec4, _):
             var underlyingType = CType.float
             let components = defaultValue

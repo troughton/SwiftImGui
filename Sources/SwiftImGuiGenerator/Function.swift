@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImGuiFunction {
+final class ImGuiFunction {
     enum FunctionType {
         case staticMethod
         case method
@@ -36,7 +36,14 @@ struct ImGuiFunction {
             } else {
                 self.name = arg.name
             }
-            self.type = arg.type
+            switch arg.type {
+            case .int32:
+                self.type = .intArgument
+            case .pointer(to: .int32):
+                self.type = .pointer(to: .intArgument)
+            default:
+                self.type = arg.type
+            }
             self.defaultValue = defaultValueStr
         }
     }
@@ -68,6 +75,8 @@ struct ImGuiFunction {
     var arguments: [Argument]
     var cImGuiFunctionName: String
     var isMutating: Bool = false
+    var selfParamIndex: Int = -1
+    var setterFunction: ImGuiFunction?
     
     init?(_ function: CImGuiFunction) {
         if function.constructor ?? false || function.destructor ?? false || function.templated ?? false {
@@ -90,8 +99,9 @@ struct ImGuiFunction {
         self.cImGuiFunctionName = function.ov_cimguiname
         
         var arguments = function.argsT
-        if arguments.first?.name == "self" {
-            let arg = arguments.removeFirst()
+        if let selfArgIndex = arguments.firstIndex(where: { $0.name == "self" }) {
+            let arg = arguments.remove(at: selfArgIndex)
+            self.selfParamIndex = selfArgIndex
             self.type = .method
             if case .pointer = arg.type {
                 self.isMutating = true
@@ -118,13 +128,82 @@ struct ImGuiFunction {
             }
         }
         
-        if self.arguments.isEmpty, self.name.starts(with: "get"), !self.isMutating {
+        if self.arguments.allSatisfy({ $0.isByReferenceReturn }), self.name.starts(with: "get") {
             self.name = toSwiftFunctionName(self.name.dropFirst(3))
             self.isComputedVariable = true
         }
     }
     
+    private func printBody(arguments: [Argument], to reflectionPrinter: inout ReflectionPrinter, namespace: String?) {
+        for arg in arguments where arg.type.hasDifferingSwiftType && (arg.type.underlyingInOutType != nil || arg.isByReferenceReturn) {
+            let underlyingType = arg.type.underlyingInOutType ?? arg.type
+            reflectionPrinter.print("var \(arg.name) = \(underlyingType.constructCType("\(arg.name)Temp"))")
+            reflectionPrinter.print("defer { \(arg.name)Temp = \(underlyingType.constructSwiftType(arg.name)) }")
+        }
+        
+        var cImGuiArgumentsArray = self.arguments.map { arg -> String in
+            switch arg.type {
+            case .pointer(to: .vector), .pointer(to: .array):
+                return arg.name
+            default:
+                return arg.type.underlyingInOutType != nil || arg.isByReferenceReturn ? "&\(arg.name)" : arg.type.constructCType(arg.name)
+            }
+        }
+        if self.type == .method {
+            cImGuiArgumentsArray.insert("\(self.isMutating ? "&" : "")self", at: self.selfParamIndex)
+        }
+            
+        let cImGuiArguments = cImGuiArgumentsArray.joined(separator: ", ")
+        
+        let returnKeyword: String
+        if case .normal(.void) = self.returnType {
+            returnKeyword = ""
+        } else {
+            returnKeyword = "return "
+        }
+        
+        var scopeCount = 0
+        for arg in self.arguments {
+            if case .vaList = arg.type {
+                reflectionPrinter.print("\(returnKeyword)withVaList([]) { \(arg.name) in ")
+                scopeCount += 1
+            } else if case .pointer(to: .vector) = arg.type {
+                reflectionPrinter.print("\(returnKeyword)\(arg.name).withMutableMemberPointer { \(arg.name) in ")
+                scopeCount += 1
+            } else if case .pointer(to: .array) = arg.type {
+                reflectionPrinter.print("\(returnKeyword)withMutableMembers(of: &\(arg.name)) { \(arg.name) in")
+                scopeCount += 1
+            }
+        }
+        switch self.returnType {
+        case .normal(let type):
+            let swiftType = type.constructSwiftType("\(cImGuiFunctionName)(\(cImGuiArguments))")
+            reflectionPrinter.print("\(returnKeyword)\(swiftType)")
+        case .byReference(let tupleValues):
+            for (name, type) in tupleValues {
+                if case .optional = type {
+                    reflectionPrinter.print("var \(name): \(type.cTypeName(in: namespace)) = nil")
+                } else {
+                    reflectionPrinter.print("var \(name) = \(type.cTypeName(in: namespace))()")
+                }
+            }
+            reflectionPrinter.print("\(cImGuiFunctionName)(\(cImGuiArguments))")
+            let tupleReturn = "\(returnKeyword)(" + tupleValues.map {
+                return $0.type.constructSwiftType($0.name)
+            }.joined(separator: ", ") + ")"
+            
+            reflectionPrinter.print(tupleReturn)
+        }
+        for _ in 0..<scopeCount {
+            reflectionPrinter.print("}")
+        }
+    }
+    
     func print(to reflectionPrinter: inout ReflectionPrinter, namespace: String?) {
+        if self.isComputedVariable, self.name.starts(with: "set") {
+            return // We're a computed setter; our getter will print our body.
+        }
+        
         if case .normal(.bool) = self.returnType, !self.arguments.isEmpty {
             reflectionPrinter.print("@discardableResult")
         }
@@ -189,57 +268,20 @@ struct ImGuiFunction {
         declaration += "\(self.returnType.swiftTypeName(in: namespace)) {"
         reflectionPrinter.print(declaration)
         
-        for arg in arguments where arg.type.hasDifferingSwiftType && (arg.type.underlyingInOutType != nil || arg.isByReferenceReturn) {
-            let underlyingType = arg.type.underlyingInOutType ?? arg.type
-            reflectionPrinter.print("var \(arg.name) = \(underlyingType.constructCType("\(arg.name)Temp"))")
-            reflectionPrinter.print("defer { \(arg.name)Temp = \(underlyingType.constructSwiftType(arg.name)) }")
+        if self.isComputedVariable, self.setterFunction != nil || self.isMutating {
+            reflectionPrinter.print("\(self.isMutating ? "mutating " : "")get {")
+            self.printBody(arguments: arguments, to: &reflectionPrinter, namespace: namespace)
+            reflectionPrinter.print("}")
+        } else {
+            self.printBody(arguments: arguments, to: &reflectionPrinter, namespace: namespace)
         }
         
-        let cImGuiArguments = ((self.type == .method ? ["\(self.isMutating ? "&" : "")self"] : []) +
-                               self.arguments.map { arg in
-            switch arg.type {
-            case .pointer(to: .vector), .pointer(to: .array):
-                return arg.name
-            default:
-                return arg.type.underlyingInOutType != nil || arg.isByReferenceReturn ? "&\(arg.name)" : arg.type.constructCType(arg.name)
-            }
-        }).joined(separator: ", ")
-        
-        var scopeCount = 0
-        for arg in self.arguments {
-            if case .vaList = arg.type {
-                reflectionPrinter.print("return withVaList([]) { \(arg.name) in ")
-                scopeCount += 1
-            } else if case .pointer(to: .vector) = arg.type {
-                reflectionPrinter.print("return \(arg.name).withMutableMemberPointer { \(arg.name) in ")
-                scopeCount += 1
-            } else if case .pointer(to: .array) = arg.type {
-                reflectionPrinter.print("return withMutableMembers(of: &\(arg.name)) { \(arg.name) in")
-                scopeCount += 1
-            }
-        }
-        switch self.returnType {
-        case .normal(let type):
-            let swiftType = type.constructSwiftType("\(cImGuiFunctionName)(\(cImGuiArguments))")
-            reflectionPrinter.print("return \(swiftType)")
-        case .byReference(let tupleValues):
-            for (name, type) in tupleValues {
-                if case .optional = type {
-                    reflectionPrinter.print("var \(name): \(type.cTypeName(in: namespace)) = nil")
-                } else {
-                    reflectionPrinter.print("var \(name) = \(type.cTypeName(in: namespace))()")
-                }
-            }
-            reflectionPrinter.print("\(cImGuiFunctionName)(\(cImGuiArguments))")
-            let tupleReturn = "return (" + tupleValues.map {
-                return $0.type.constructSwiftType($0.name)
-            }.joined(separator: ", ") + ")"
-            
-            reflectionPrinter.print(tupleReturn)
-        }
-        for _ in 0..<scopeCount {
+        if let setterFunction = self.setterFunction {
+            reflectionPrinter.print("set(\(setterFunction.arguments[0].name)) {")
+            setterFunction.printBody(arguments: setterFunction.arguments, to: &reflectionPrinter, namespace: namespace)
             reflectionPrinter.print("}")
         }
+        
         reflectionPrinter.print("}")
         reflectionPrinter.newLine()
     }
