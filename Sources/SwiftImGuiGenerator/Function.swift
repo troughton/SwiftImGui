@@ -41,6 +41,8 @@ final class ImGuiFunction {
                 self.type = .intArgument
             case .pointer(to: .int32):
                 self.type = .pointer(to: .intArgument)
+            case .optional(.pointer(to: .int32)):
+                self.type = .optional(.pointer(to: .intArgument))
             default:
                 self.type = arg.type
             }
@@ -119,9 +121,13 @@ final class ImGuiFunction {
         if case .void = (function.ret ?? .void) {
             var outValueArgs = [(name: String, type: CType)]()
             for (i, arg) in self.arguments.enumerated() where arg.name.contains("out") || arg.name.contains("Out") {
-                guard case .pointer(let underlyingType) = arg.type else { continue }
-                self.arguments[i].isByReferenceReturn = true
-                outValueArgs.append((arg.name, underlyingType))
+                switch arg.type {
+                case .pointer(to: let underlyingType), .optional(.pointer(to: let underlyingType)):
+                    self.arguments[i].isByReferenceReturn = true
+                    outValueArgs.append((arg.name, underlyingType))
+                default:
+                    break
+                }
             }
             if !outValueArgs.isEmpty {
                 self.returnType = .byReference(outValueArgs)

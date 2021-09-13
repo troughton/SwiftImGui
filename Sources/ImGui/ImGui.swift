@@ -1545,7 +1545,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func debugCheckVersionAndDataLayout(versionStr version_str: String, szIo sz_io: Int, szStyle sz_style: Int, szVec2 sz_vec2: Int, szVec4 sz_vec4: Int, szDrawvert sz_drawvert: Int, szDrawidx sz_drawidx: Int) -> Bool {
+    public static func debugCheckVersionAndDataLayout(versionStr version_str: String, szIO sz_io: Int, szStyle sz_style: Int, szVec2 sz_vec2: Int, szVec4 sz_vec4: Int, szDrawvert sz_drawvert: Int, szDrawidx sz_drawidx: Int) -> Bool {
         return igDebugCheckVersionAndDataLayout(version_str, sz_io, sz_style, sz_vec2, sz_vec4, sz_drawvert, sz_drawidx)
     }
 
@@ -1807,10 +1807,6 @@ public enum ImGui {
         return igGetStyleColorVec4(idx.rawValue)
     }
 
-    public static var iO: UnsafeMutablePointer<ImGuiIO> {
-        return igGetIO()
-    }
-
     public static func image(userTextureId user_texture_id: ImTextureID, size: SIMD2<Float>, uv0: SIMD2<Float> = SIMD2<Float>(0, 0), uv1: SIMD2<Float> = SIMD2<Float>(1, 1), tintColor tint_col: SIMD4<Float> = SIMD4<Float>(1, 1, 1, 1), borderColor border_col: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)) -> Void {
         igImage(user_texture_id, ImVec2(size), ImVec2(uv0), ImVec2(uv1), ImVec4(tint_col), ImVec4(border_col))
     }
@@ -1911,6 +1907,10 @@ public enum ImGui {
     @discardableResult
     public static func invisibleButton(strId str_id: String, size: SIMD2<Float>, flags: ButtonFlags = []) -> Bool {
         return igInvisibleButton(str_id, ImVec2(size), flags.rawValue)
+    }
+
+    public static var io: UnsafeMutablePointer<ImGuiIO> {
+        return igGetIO()
     }
 
     public static var isAnyItemActive: Bool {
@@ -3339,7 +3339,7 @@ extension ImFontAtlas {
     }
 
     @discardableResult
-    public mutating func getMouseCursorTexData(cursor: ImGui.MouseCursor, outOffset out_offsetTemp: inout SIMD2<Float>, outSize out_sizeTemp: inout SIMD2<Float>, outUvBorder out_uv_border: inout (ImVec2, ImVec2), outUvFill out_uv_fill: inout (ImVec2, ImVec2)) -> Bool {
+    public mutating func getMouseCursorTexData(cursor: ImGui.MouseCursor, outOffset out_offsetTemp: inout SIMD2<Float>, outSize out_sizeTemp: inout SIMD2<Float>, outUVBorder out_uv_border: inout (ImVec2, ImVec2), outUVFill out_uv_fill: inout (ImVec2, ImVec2)) -> Bool {
         var out_offset = ImVec2(out_offsetTemp)
         defer { out_offsetTemp = SIMD2<Float>(out_offset) }
         var out_size = ImVec2(out_sizeTemp)
@@ -3349,22 +3349,6 @@ extension ImFontAtlas {
                 return ImFontAtlas_GetMouseCursorTexData(&self, cursor.rawValue, &out_offset, &out_size, out_uv_border, out_uv_fill)
             }
         }
-    }
-
-    public mutating func getTexDataAsAlpha8(outBytesPerPixel out_bytes_per_pixel: UnsafeMutablePointer<Int32>? = nil) -> (out_pixels: UnsafeMutablePointer<UInt8>?, out_width: Int, out_height: Int) {
-        var out_pixels: UnsafeMutablePointer<UInt8>? = nil
-        var out_width = Int32()
-        var out_height = Int32()
-        ImFontAtlas_GetTexDataAsAlpha8(&self, &out_pixels, &out_width, &out_height, out_bytes_per_pixel)
-        return (out_pixels, Int(out_width), Int(out_height))
-    }
-
-    public mutating func getTexDataAsRGBA32(outBytesPerPixel out_bytes_per_pixel: UnsafeMutablePointer<Int32>? = nil) -> (out_pixels: UnsafeMutablePointer<UInt8>?, out_width: Int, out_height: Int) {
-        var out_pixels: UnsafeMutablePointer<UInt8>? = nil
-        var out_width = Int32()
-        var out_height = Int32()
-        ImFontAtlas_GetTexDataAsRGBA32(&self, &out_pixels, &out_width, &out_height, out_bytes_per_pixel)
-        return (out_pixels, Int(out_width), Int(out_height))
     }
 
     public var glyphRangesChineseFull: UnsafePointer<ImWchar> {
@@ -3421,6 +3405,28 @@ extension ImFontAtlas {
 
     public mutating func setTexID(id: ImTextureID) -> Void {
         ImFontAtlas_SetTexID(&self, id)
+    }
+
+    public var texDataAsAlpha8: (out_pixels: UnsafeMutablePointer<UInt8>?, out_width: Int, out_height: Int, out_bytes_per_pixel: Int) {
+        mutating get {
+            var out_pixels: UnsafeMutablePointer<UInt8>? = nil
+            var out_width = Int32()
+            var out_height = Int32()
+            var out_bytes_per_pixel = Int32()
+            ImFontAtlas_GetTexDataAsAlpha8(&self, &out_pixels, &out_width, &out_height, &out_bytes_per_pixel)
+            return (out_pixels, Int(out_width), Int(out_height), Int(out_bytes_per_pixel))
+        }
+    }
+
+    public var texDataAsRGBA32: (out_pixels: UnsafeMutablePointer<UInt8>?, out_width: Int, out_height: Int, out_bytes_per_pixel: Int) {
+        mutating get {
+            var out_pixels: UnsafeMutablePointer<UInt8>? = nil
+            var out_width = Int32()
+            var out_height = Int32()
+            var out_bytes_per_pixel = Int32()
+            ImFontAtlas_GetTexDataAsRGBA32(&self, &out_pixels, &out_width, &out_height, &out_bytes_per_pixel)
+            return (out_pixels, Int(out_width), Int(out_height), Int(out_bytes_per_pixel))
+        }
     }
 
 }

@@ -37,79 +37,6 @@ extension ImGui {
         public var subCommands = [ImDrawCmd]()
     }
     
-    public struct DrawList {
-        private let imList : UnsafeMutablePointer<ImDrawList>
-        
-        init(_ imList: UnsafeMutablePointer<ImDrawList>) {
-            self.imList = imList
-        }
-        
-        public var vertexBufferSize : Int {
-            return Int(imList.pointee.VtxBuffer.Size)
-        }
-        
-        public subscript(vertex n: Int) -> ImDrawVert {
-            get {
-                return imList.pointee.VtxBuffer.Data[n]
-            }
-            set {
-                imList.pointee.VtxBuffer.Data[n] = newValue
-            }
-        }
-        
-        public subscript(vertexPtr n: Int) -> UnsafeMutablePointer<ImDrawVert> {
-            return imList.pointee.VtxBuffer.Data.advanced(by: n)
-        }
-        
-        public var indexBufferSize : Int {
-            return Int(self.imList.pointee.IdxBuffer.Size)
-        }
-        
-        public subscript(index n: Int) -> ImDrawIdx {
-            get {
-                return self.imList.pointee.IdxBuffer.Data[n]
-            }
-            set {
-                self.imList.pointee.IdxBuffer.Data[n] = newValue
-            }
-        }
-        
-        public subscript(indexPtr n: Int) -> UnsafeMutablePointer<ImDrawIdx> {
-            return self.imList.pointee.IdxBuffer.Data.advanced(by: n)
-        }
-        
-        public var commandSize : Int {
-            return Int(self.imList.pointee.CmdBuffer.Size)
-        }
-        
-        public subscript(command n: Int) -> ImDrawCmd {
-            get {
-                return self.imList.pointee.CmdBuffer.Data[n]
-            }
-            set {
-                self.imList.pointee.CmdBuffer.Data[n] = newValue
-            }
-        }
-        
-        public func addText(_ text: String, position: SIMD2<Float>, color: SIMD4<Float>) {
-            self.addText(text, position: position, color: ImGui.colorConvertFloat4ToU32(color))
-        }
-        
-        public func addText(_ text: String, position: SIMD2<Float>, color: UInt32) {
-            text.withCString { text in
-                self.addText(text, position: position, color: color)
-            }
-        }
-        
-        public func addText(_ text: UnsafePointer<CChar>, position: SIMD2<Float>, color: UInt32) {
-            ImDrawList_AddText_Vec2(self.imList, ImVec2(position), color, text, text + strlen(text))
-        }
-        
-        public func clearFreeMemory() {
-            ImDrawList__ClearFreeMemory(self.imList)
-        }
-    }
-    
     public static func renderData(drawData: UnsafeMutablePointer<ImDrawData>, clipScale: Float) -> RenderData {
         if clipScale != 1.0 {
             drawData.pointee.scaleClipRects(fbScale: SIMD2<Float>(repeating: clipScale))
@@ -130,7 +57,7 @@ extension ImGui {
         
         // Render command lists
         for n in 0..<Int(drawData.pointee.CmdListsCount) {
-            let cmdList = ImGui.DrawList(drawData.pointee.CmdLists[n]!)
+            let cmdList = drawData.pointee.CmdLists[n]!.pointee
             
             let vertexBufferSize = cmdList.vertexBufferSize
             let indexBufferSize = cmdList.indexBufferSize
@@ -157,5 +84,68 @@ extension ImGui {
         let displaySize = SIMD2<Float>(drawData.pointee.DisplaySize.x, drawData.pointee.DisplaySize.y)
         
         return RenderData(vertexBuffer: vertexBuffer, indexBuffer: indexBuffer, drawCommands: drawCommands, displayPosition: displayPosition, displaySize: displaySize, clipScaleFactor: clipScale)
+    }
+}
+
+extension ImDrawList {
+    public var vertexBufferSize : Int {
+        return Int(self.VtxBuffer.Size)
+    }
+    
+    public subscript(vertex n: Int) -> ImDrawVert {
+        get {
+            return self.VtxBuffer.Data[n]
+        }
+        set {
+            self.VtxBuffer.Data[n] = newValue
+        }
+    }
+    
+    public subscript(vertexPtr n: Int) -> UnsafeMutablePointer<ImDrawVert> {
+        return self.VtxBuffer.Data.advanced(by: n)
+    }
+    
+    public var indexBufferSize : Int {
+        return Int(self.IdxBuffer.Size)
+    }
+    
+    public subscript(index n: Int) -> ImDrawIdx {
+        get {
+            return self.IdxBuffer.Data[n]
+        }
+        set {
+            self.IdxBuffer.Data[n] = newValue
+        }
+    }
+    
+    public subscript(indexPtr n: Int) -> UnsafeMutablePointer<ImDrawIdx> {
+        return self.IdxBuffer.Data.advanced(by: n)
+    }
+    
+    public var commandSize : Int {
+        return Int(self.CmdBuffer.Size)
+    }
+    
+    public subscript(command n: Int) -> ImDrawCmd {
+        get {
+            return self.CmdBuffer.Data[n]
+        }
+        set {
+            self.CmdBuffer.Data[n] = newValue
+        }
+    }
+    
+    public mutating func addText(_ text: String, position: SIMD2<Float>, color: SIMD4<Float>) {
+        self.addText(text, position: position, color: ImGui.colorConvertFloat4ToU32(color))
+    }
+    
+    public mutating func addText(_ text: String, position: SIMD2<Float>, color: UInt32) {
+        text.withCString { text in
+            self.addText(text, position: position, color: color)
+        }
+    }
+    
+    public mutating func addText(_ text: UnsafePointer<CChar>, position: SIMD2<Float>, color: UInt32) {
+        ImDrawList_AddText_Vec2(&self, ImVec2(position), color, text, text + strlen(text))
     }
 }

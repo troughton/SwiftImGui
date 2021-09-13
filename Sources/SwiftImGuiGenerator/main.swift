@@ -68,7 +68,16 @@ func toSwiftParameterName<S: StringProtocol>(_ parameterName: S) -> String {
                 }
             }
             .enumerated()
-            .map { $0.offset > 0 ? $0.element.capitalized : String($0.element) }
+            .map { (offset, element) in
+                if offset > 0 {
+                    if element == "uv" || element == "io" {
+                        return element.uppercased()
+                    }
+                    return element.capitalized
+                } else {
+                    return String(element)
+                }
+            }
             .joined()
         
     }
@@ -89,6 +98,11 @@ func toSwiftFunctionName<S: StringProtocol>(_ functionName: S) -> String {
         name.hasSuffix("V") {
         name.removeLast()
     }
+    
+    if name.count == 2 {
+        name = name.lowercased()
+    }
+    
     if ["repeat", "while", "super"].contains(name) {
         return "`\(name)`"
     }
