@@ -264,5 +264,4 @@ for (type, functions) in types.sorted(by: { $0.key < $1.key }) {
     reflectionPrinter.newLine()
 }
 
-try! reflectionPrinter.write(to: URL(fileURLWithPath: "/Users/Thomas/troughton Repositories/SwiftImGui/Sources/ImGui/ImGui.swift"))
 print(reflectionPrinter.buffer)
