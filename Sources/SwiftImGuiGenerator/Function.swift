@@ -118,6 +118,11 @@ final class ImGuiFunction {
         self.returnType = .normal(function.ret ?? .void)
         self.arguments = arguments.map { Argument($0, function: function) }
         
+        if let firstArgIndex = self.arguments.firstIndex(where: { !$0.isByReferenceReturn }),
+           ["fmt", "str_id", "ptr_id", "int_id"].contains(self.arguments[firstArgIndex].name) || self.name.lowercased().hasSuffix((self.arguments[firstArgIndex].label ?? self.arguments[firstArgIndex].name).lowercased()) {
+            self.arguments[firstArgIndex].label = "_"
+        }
+        
         if case .void = (function.ret ?? .void) {
             var outValueArgs = [(name: String, type: CType)]()
             for (i, arg) in self.arguments.enumerated() where arg.name.contains("out") || arg.name.contains("Out") {

@@ -106,6 +106,15 @@ func toSwiftFunctionName<S: StringProtocol>(_ functionName: S) -> String {
     if ["repeat", "while", "super", "default"].contains(name) {
         return "`\(name)`"
     }
+
+    for typeSpecifier in ["Int2", "Int3", "Int4", "Int", "Float2", "Float3", "Float4", "Float"] {
+        if name.hasSuffix(typeSpecifier) {
+            name.removeLast(typeSpecifier.count)
+        }
+    }
+    if name.hasSuffix("Edit3") || name.hasSuffix("Edit4") {
+        name.removeLast()
+    }
     
     return name
 }
