@@ -103,7 +103,7 @@ func toSwiftFunctionName<S: StringProtocol>(_ functionName: S) -> String {
         name = name.lowercased()
     }
     
-    if ["repeat", "while", "super"].contains(name) {
+    if ["repeat", "while", "super", "default"].contains(name) {
         return "`\(name)`"
     }
     
@@ -113,7 +113,7 @@ func toSwiftFunctionName<S: StringProtocol>(_ functionName: S) -> String {
 func toSwiftMemberName<S: StringProtocol>(_ memberName: S) -> String {
     let name = memberName.prefix(1).lowercased() + memberName.dropFirst()
     
-    if ["repeat", "while", "super"].contains(name) {
+    if ["repeat", "while", "super", "default"].contains(name) {
         return "`\(name)`"
     }
     return name
@@ -126,14 +126,17 @@ let decoder = JSONDecoder()
 let structsAndEnums = try decoder.decode(ImGuiStructsAndEnums.self, from: try! Data(contentsOf: directory.appendingPathComponent("structs_and_enums.json")))
 
 for (enumName, enumMembers) in structsAndEnums.enums {
-    let type = CTypeStruct.named(enumName, isOptionSet: true)
+    let type = CTypeStruct.named(enumName, isOptionSetOrEnum: true)
     type.members.append(.init(name: "rawValue", type: .int32, isStatic: false, computedPropertyText: nil))
-    type.members.append(contentsOf: enumMembers.compactMap { member in
-        if member.name.hasSuffix("_COUNT") { return nil }
-        if member.calc_value == 0 { return nil }
-        
-        return CTypeStruct.Member(name: toSwiftMemberName(member.name.split(separator: "_").last!), type: .struct(type), isStatic: true, computedPropertyText: "\(type.name)(rawValue: \(member.calc_value))")
+    type.members.append(contentsOf: enumMembers.prefix(while: { !$0.name.hasSuffix("_COUNT") }).compactMap { member in
+        return CTypeStruct.Member(name: toSwiftMemberName(member.name.split(separator: "_").last!), type: .struct(type), isStatic: true, rawValue: member.calc_value)
     })
+    if type.isEnum {
+        type.members.removeFirst()
+    }
+    if type.isOptionSet, let zeroIndex = type.members.firstIndex(where: { $0.rawValue == 0 }) {
+        type.members.remove(at: zeroIndex)
+    }
 }
 
 let typedefs = try decoder.decode([String: String].self, from: try! Data(contentsOf: directory.appendingPathComponent("typedefs_dict.json")))
