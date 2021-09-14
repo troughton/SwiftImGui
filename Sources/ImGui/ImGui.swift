@@ -45,15 +45,22 @@ func withMutableMembers<T, R>(of tuple: inout (T, T),  _ perform: (UnsafeMutable
 }
 
 public enum ImGui {
-    public struct Axis: OptionSet  {
+    public struct ActivateFlags: OptionSet  {
         public var rawValue: Int32
 
         public init(rawValue: Self.RawValue) {
             self.rawValue = rawValue
         }
 
-        public static var none: Axis { return Axis(rawValue: -1) }
-        public static var y: Axis { return Axis(rawValue: 1) }
+        public static var preferInput: ActivateFlags { return ActivateFlags(rawValue: 1) }
+        public static var preferTweak: ActivateFlags { return ActivateFlags(rawValue: 2) }
+        public static var tryToPreserveState: ActivateFlags { return ActivateFlags(rawValue: 4) }
+    }
+
+    public enum Axis: Int32, CaseIterable  {
+        case none = -1
+        case x = 0
+        case y = 1
     }
 
     public struct BackendFlags: OptionSet  {
@@ -67,6 +74,9 @@ public enum ImGui {
         public static var hasMouseCursors: BackendFlags { return BackendFlags(rawValue: 2) }
         public static var hasSetMousePos: BackendFlags { return BackendFlags(rawValue: 4) }
         public static var rendererHasVtxOffset: BackendFlags { return BackendFlags(rawValue: 8) }
+        public static var platformHasViewports: BackendFlags { return BackendFlags(rawValue: 1024) }
+        public static var hasMouseHoveredViewport: BackendFlags { return BackendFlags(rawValue: 2048) }
+        public static var rendererHasViewports: BackendFlags { return BackendFlags(rawValue: 4096) }
     }
 
     public struct ButtonFlags: OptionSet  {
@@ -109,65 +119,62 @@ public enum ImGui {
         public static var pressedOnDefault: ButtonFlagsPrivate { return ButtonFlagsPrivate(rawValue: 32) }
     }
 
-    public struct Color: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var textDisabled: Color { return Color(rawValue: 1) }
-        public static var windowBg: Color { return Color(rawValue: 2) }
-        public static var childBg: Color { return Color(rawValue: 3) }
-        public static var popupBg: Color { return Color(rawValue: 4) }
-        public static var border: Color { return Color(rawValue: 5) }
-        public static var borderShadow: Color { return Color(rawValue: 6) }
-        public static var frameBg: Color { return Color(rawValue: 7) }
-        public static var frameBgHovered: Color { return Color(rawValue: 8) }
-        public static var frameBgActive: Color { return Color(rawValue: 9) }
-        public static var titleBg: Color { return Color(rawValue: 10) }
-        public static var titleBgActive: Color { return Color(rawValue: 11) }
-        public static var titleBgCollapsed: Color { return Color(rawValue: 12) }
-        public static var menuBarBg: Color { return Color(rawValue: 13) }
-        public static var scrollbarBg: Color { return Color(rawValue: 14) }
-        public static var scrollbarGrab: Color { return Color(rawValue: 15) }
-        public static var scrollbarGrabHovered: Color { return Color(rawValue: 16) }
-        public static var scrollbarGrabActive: Color { return Color(rawValue: 17) }
-        public static var checkMark: Color { return Color(rawValue: 18) }
-        public static var sliderGrab: Color { return Color(rawValue: 19) }
-        public static var sliderGrabActive: Color { return Color(rawValue: 20) }
-        public static var button: Color { return Color(rawValue: 21) }
-        public static var buttonHovered: Color { return Color(rawValue: 22) }
-        public static var buttonActive: Color { return Color(rawValue: 23) }
-        public static var header: Color { return Color(rawValue: 24) }
-        public static var headerHovered: Color { return Color(rawValue: 25) }
-        public static var headerActive: Color { return Color(rawValue: 26) }
-        public static var separator: Color { return Color(rawValue: 27) }
-        public static var separatorHovered: Color { return Color(rawValue: 28) }
-        public static var separatorActive: Color { return Color(rawValue: 29) }
-        public static var resizeGrip: Color { return Color(rawValue: 30) }
-        public static var resizeGripHovered: Color { return Color(rawValue: 31) }
-        public static var resizeGripActive: Color { return Color(rawValue: 32) }
-        public static var tab: Color { return Color(rawValue: 33) }
-        public static var tabHovered: Color { return Color(rawValue: 34) }
-        public static var tabActive: Color { return Color(rawValue: 35) }
-        public static var tabUnfocused: Color { return Color(rawValue: 36) }
-        public static var tabUnfocusedActive: Color { return Color(rawValue: 37) }
-        public static var plotLines: Color { return Color(rawValue: 38) }
-        public static var plotLinesHovered: Color { return Color(rawValue: 39) }
-        public static var plotHistogram: Color { return Color(rawValue: 40) }
-        public static var plotHistogramHovered: Color { return Color(rawValue: 41) }
-        public static var tableHeaderBg: Color { return Color(rawValue: 42) }
-        public static var tableBorderStrong: Color { return Color(rawValue: 43) }
-        public static var tableBorderLight: Color { return Color(rawValue: 44) }
-        public static var tableRowBg: Color { return Color(rawValue: 45) }
-        public static var tableRowBgAlt: Color { return Color(rawValue: 46) }
-        public static var textSelectedBg: Color { return Color(rawValue: 47) }
-        public static var dragDropTarget: Color { return Color(rawValue: 48) }
-        public static var navHighlight: Color { return Color(rawValue: 49) }
-        public static var navWindowingHighlight: Color { return Color(rawValue: 50) }
-        public static var navWindowingDimBg: Color { return Color(rawValue: 51) }
-        public static var modalWindowDimBg: Color { return Color(rawValue: 52) }
+    public enum Color: Int32, CaseIterable  {
+        case text = 0
+        case textDisabled = 1
+        case windowBg = 2
+        case childBg = 3
+        case popupBg = 4
+        case border = 5
+        case borderShadow = 6
+        case frameBg = 7
+        case frameBgHovered = 8
+        case frameBgActive = 9
+        case titleBg = 10
+        case titleBgActive = 11
+        case titleBgCollapsed = 12
+        case menuBarBg = 13
+        case scrollbarBg = 14
+        case scrollbarGrab = 15
+        case scrollbarGrabHovered = 16
+        case scrollbarGrabActive = 17
+        case checkMark = 18
+        case sliderGrab = 19
+        case sliderGrabActive = 20
+        case button = 21
+        case buttonHovered = 22
+        case buttonActive = 23
+        case header = 24
+        case headerHovered = 25
+        case headerActive = 26
+        case separator = 27
+        case separatorHovered = 28
+        case separatorActive = 29
+        case resizeGrip = 30
+        case resizeGripHovered = 31
+        case resizeGripActive = 32
+        case tab = 33
+        case tabHovered = 34
+        case tabActive = 35
+        case tabUnfocused = 36
+        case tabUnfocusedActive = 37
+        case dockingPreview = 38
+        case dockingEmptyBg = 39
+        case plotLines = 40
+        case plotLinesHovered = 41
+        case plotHistogram = 42
+        case plotHistogramHovered = 43
+        case tableHeaderBg = 44
+        case tableBorderStrong = 45
+        case tableBorderLight = 46
+        case tableRowBg = 47
+        case tableRowBgAlt = 48
+        case textSelectedBg = 49
+        case dragDropTarget = 50
+        case navHighlight = 51
+        case navWindowingHighlight = 52
+        case navWindowingDimBg = 53
+        case modalWindowDimBg = 54
     }
 
     public struct ColorEditFlags: OptionSet  {
@@ -234,17 +241,17 @@ public enum ImGui {
         public static var customPreview: ComboFlagsPrivate { return ComboFlagsPrivate(rawValue: 1048576) }
     }
 
-    public struct Cond: OptionSet  {
+    public struct Condition: OptionSet  {
         public var rawValue: Int32
 
         public init(rawValue: Self.RawValue) {
             self.rawValue = rawValue
         }
 
-        public static var always: Cond { return Cond(rawValue: 1) }
-        public static var once: Cond { return Cond(rawValue: 2) }
-        public static var firstUseEver: Cond { return Cond(rawValue: 4) }
-        public static var appearing: Cond { return Cond(rawValue: 8) }
+        public static var always: Condition { return Condition(rawValue: 1) }
+        public static var once: Condition { return Condition(rawValue: 2) }
+        public static var firstUseEver: Condition { return Condition(rawValue: 4) }
+        public static var appearing: Condition { return Condition(rawValue: 8) }
     }
 
     public struct ConfigFlags: OptionSet  {
@@ -260,67 +267,106 @@ public enum ImGui {
         public static var navNoCaptureKeyboard: ConfigFlags { return ConfigFlags(rawValue: 8) }
         public static var noMouse: ConfigFlags { return ConfigFlags(rawValue: 16) }
         public static var noMouseCursorChange: ConfigFlags { return ConfigFlags(rawValue: 32) }
+        public static var dockingEnable: ConfigFlags { return ConfigFlags(rawValue: 64) }
+        public static var viewportsEnable: ConfigFlags { return ConfigFlags(rawValue: 1024) }
+        public static var dpiEnableScaleViewports: ConfigFlags { return ConfigFlags(rawValue: 16384) }
+        public static var dpiEnableScaleFonts: ConfigFlags { return ConfigFlags(rawValue: 32768) }
         public static var isSRGB: ConfigFlags { return ConfigFlags(rawValue: 1048576) }
         public static var isTouchScreen: ConfigFlags { return ConfigFlags(rawValue: 2097152) }
     }
 
-    public struct ContextHookType: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var newFramePost: ContextHookType { return ContextHookType(rawValue: 1) }
-        public static var endFramePre: ContextHookType { return ContextHookType(rawValue: 2) }
-        public static var endFramePost: ContextHookType { return ContextHookType(rawValue: 3) }
-        public static var renderPre: ContextHookType { return ContextHookType(rawValue: 4) }
-        public static var renderPost: ContextHookType { return ContextHookType(rawValue: 5) }
-        public static var shutdown: ContextHookType { return ContextHookType(rawValue: 6) }
-        public static var pendingRemoval: ContextHookType { return ContextHookType(rawValue: 7) }
+    public enum ContextHookType: Int32, CaseIterable  {
+        case newFramePre = 0
+        case newFramePost = 1
+        case endFramePre = 2
+        case endFramePost = 3
+        case renderPre = 4
+        case renderPost = 5
+        case shutdown = 6
+        case pendingRemoval = 7
     }
 
-    public struct DataType: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var u8: DataType { return DataType(rawValue: 1) }
-        public static var s16: DataType { return DataType(rawValue: 2) }
-        public static var u16: DataType { return DataType(rawValue: 3) }
-        public static var s32: DataType { return DataType(rawValue: 4) }
-        public static var u32: DataType { return DataType(rawValue: 5) }
-        public static var s64: DataType { return DataType(rawValue: 6) }
-        public static var u64: DataType { return DataType(rawValue: 7) }
-        public static var float: DataType { return DataType(rawValue: 8) }
-        public static var double: DataType { return DataType(rawValue: 9) }
+    public enum DataAuthority: Int32, CaseIterable  {
+        case auto = 0
+        case dockNode = 1
+        case window = 2
     }
 
-    public struct DataTypePrivate: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var string: DataTypePrivate { return DataTypePrivate(rawValue: 11) }
-        public static var pointer: DataTypePrivate { return DataTypePrivate(rawValue: 12) }
-        public static var iD: DataTypePrivate { return DataTypePrivate(rawValue: 13) }
+    public enum DataType: Int32, CaseIterable  {
+        case s8 = 0
+        case u8 = 1
+        case s16 = 2
+        case u16 = 3
+        case s32 = 4
+        case u32 = 5
+        case s64 = 6
+        case u64 = 7
+        case float = 8
+        case double = 9
     }
 
-    public struct Dir: OptionSet  {
+    public enum DataTypePrivate: Int32, CaseIterable  {
+        case string = 11
+        case pointer = 12
+        case iD = 13
+    }
+
+    public enum Direction: Int32, CaseIterable  {
+        case none = -1
+        case left = 0
+        case right = 1
+        case up = 2
+        case down = 3
+    }
+
+    public struct DockNodeFlags: OptionSet  {
         public var rawValue: Int32
 
         public init(rawValue: Self.RawValue) {
             self.rawValue = rawValue
         }
 
-        public static var none: Dir { return Dir(rawValue: -1) }
-        public static var right: Dir { return Dir(rawValue: 1) }
-        public static var up: Dir { return Dir(rawValue: 2) }
-        public static var down: Dir { return Dir(rawValue: 3) }
+        public static var keepAliveOnly: DockNodeFlags { return DockNodeFlags(rawValue: 1) }
+        public static var noDockingInCentralNode: DockNodeFlags { return DockNodeFlags(rawValue: 4) }
+        public static var passthruCentralNode: DockNodeFlags { return DockNodeFlags(rawValue: 8) }
+        public static var noSplit: DockNodeFlags { return DockNodeFlags(rawValue: 16) }
+        public static var noResize: DockNodeFlags { return DockNodeFlags(rawValue: 32) }
+        public static var autoHideTabBar: DockNodeFlags { return DockNodeFlags(rawValue: 64) }
+    }
+
+    public struct DockNodeFlagsPrivate: OptionSet  {
+        public var rawValue: Int32
+
+        public init(rawValue: Self.RawValue) {
+            self.rawValue = rawValue
+        }
+
+        public static var dockSpace: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 1024) }
+        public static var centralNode: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 2048) }
+        public static var noTabBar: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 4096) }
+        public static var hiddenTabBar: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 8192) }
+        public static var noWindowMenuButton: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 16384) }
+        public static var noCloseButton: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 32768) }
+        public static var noDocking: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 65536) }
+        public static var noDockingSplitMe: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 131072) }
+        public static var noDockingSplitOther: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 262144) }
+        public static var noDockingOverMe: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 524288) }
+        public static var noDockingOverOther: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 1048576) }
+        public static var noDockingOverEmpty: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 2097152) }
+        public static var noResizeX: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 4194304) }
+        public static var noResizeY: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 8388608) }
+        public static var sharedFlagsInheritMask: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: -1) }
+        public static var noResizeFlagsMask: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 12582944) }
+        public static var localFlagsMask: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 12713072) }
+        public static var localFlagsTransferMask: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 12712048) }
+        public static var savedFlagsMask: DockNodeFlagsPrivate { return DockNodeFlagsPrivate(rawValue: 12712992) }
+    }
+
+    public enum DockNodeState: Int32, CaseIterable  {
+        case unknown = 0
+        case hostWindowHiddenBecauseSingleWindow = 1
+        case hostWindowHiddenBecauseWindowsAreResizing = 2
+        case hostWindowVisible = 3
     }
 
     public struct DragDropFlags: OptionSet  {
@@ -387,6 +433,7 @@ public enum ImGui {
         public static var childWindows: FocusedFlags { return FocusedFlags(rawValue: 1) }
         public static var rootWindow: FocusedFlags { return FocusedFlags(rawValue: 2) }
         public static var anyWindow: FocusedFlags { return FocusedFlags(rawValue: 4) }
+        public static var dockHierarchy: FocusedFlags { return FocusedFlags(rawValue: 8) }
         public static var rootAndChildWindows: FocusedFlags { return FocusedFlags(rawValue: 3) }
     }
 
@@ -412,40 +459,31 @@ public enum ImGui {
         public static var childWindows: HoveredFlags { return HoveredFlags(rawValue: 1) }
         public static var rootWindow: HoveredFlags { return HoveredFlags(rawValue: 2) }
         public static var anyWindow: HoveredFlags { return HoveredFlags(rawValue: 4) }
-        public static var allowWhenBlockedByPopup: HoveredFlags { return HoveredFlags(rawValue: 8) }
+        public static var dockHierarchy: HoveredFlags { return HoveredFlags(rawValue: 8) }
+        public static var allowWhenBlockedByPopup: HoveredFlags { return HoveredFlags(rawValue: 16) }
         public static var allowWhenBlockedByActiveItem: HoveredFlags { return HoveredFlags(rawValue: 32) }
         public static var allowWhenOverlapped: HoveredFlags { return HoveredFlags(rawValue: 64) }
         public static var allowWhenDisabled: HoveredFlags { return HoveredFlags(rawValue: 128) }
-        public static var rectOnly: HoveredFlags { return HoveredFlags(rawValue: 104) }
+        public static var rectOnly: HoveredFlags { return HoveredFlags(rawValue: 112) }
         public static var rootAndChildWindows: HoveredFlags { return HoveredFlags(rawValue: 3) }
     }
 
-    public struct InputReadMode: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var pressed: InputReadMode { return InputReadMode(rawValue: 1) }
-        public static var released: InputReadMode { return InputReadMode(rawValue: 2) }
-        public static var `repeat`: InputReadMode { return InputReadMode(rawValue: 3) }
-        public static var repeatSlow: InputReadMode { return InputReadMode(rawValue: 4) }
-        public static var repeatFast: InputReadMode { return InputReadMode(rawValue: 5) }
+    public enum InputReadMode: Int32, CaseIterable  {
+        case down = 0
+        case pressed = 1
+        case released = 2
+        case `repeat` = 3
+        case repeatSlow = 4
+        case repeatFast = 5
     }
 
-    public struct InputSource: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var mouse: InputSource { return InputSource(rawValue: 1) }
-        public static var keyboard: InputSource { return InputSource(rawValue: 2) }
-        public static var gamepad: InputSource { return InputSource(rawValue: 3) }
-        public static var nav: InputSource { return InputSource(rawValue: 4) }
-        public static var clipboard: InputSource { return InputSource(rawValue: 5) }
+    public enum InputSource: Int32, CaseIterable  {
+        case none = 0
+        case mouse = 1
+        case keyboard = 2
+        case gamepad = 3
+        case nav = 4
+        case clipboard = 5
     }
 
     public struct InputTextFlags: OptionSet  {
@@ -489,16 +527,6 @@ public enum ImGui {
         public static var mergedItem: InputTextFlagsPrivate { return InputTextFlagsPrivate(rawValue: 268435456) }
     }
 
-    public struct ItemAddFlags: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var focusable: ItemAddFlags { return ItemAddFlags(rawValue: 1) }
-    }
-
     public struct ItemFlags: OptionSet  {
         public var rawValue: Int32
 
@@ -514,6 +542,7 @@ public enum ImGui {
         public static var selectableDontClosePopup: ItemFlags { return ItemFlags(rawValue: 32) }
         public static var mixedValue: ItemFlags { return ItemFlags(rawValue: 64) }
         public static var readOnly: ItemFlags { return ItemFlags(rawValue: 128) }
+        public static var inputable: ItemFlags { return ItemFlags(rawValue: 256) }
     }
 
     public struct ItemStatusFlags: OptionSet  {
@@ -536,34 +565,29 @@ public enum ImGui {
         public static var focused: ItemStatusFlags { return ItemStatusFlags(rawValue: 768) }
     }
 
-    public struct Key: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var leftArrow: Key { return Key(rawValue: 1) }
-        public static var rightArrow: Key { return Key(rawValue: 2) }
-        public static var upArrow: Key { return Key(rawValue: 3) }
-        public static var downArrow: Key { return Key(rawValue: 4) }
-        public static var pageUp: Key { return Key(rawValue: 5) }
-        public static var pageDown: Key { return Key(rawValue: 6) }
-        public static var home: Key { return Key(rawValue: 7) }
-        public static var end: Key { return Key(rawValue: 8) }
-        public static var insert: Key { return Key(rawValue: 9) }
-        public static var delete: Key { return Key(rawValue: 10) }
-        public static var backspace: Key { return Key(rawValue: 11) }
-        public static var space: Key { return Key(rawValue: 12) }
-        public static var enter: Key { return Key(rawValue: 13) }
-        public static var escape: Key { return Key(rawValue: 14) }
-        public static var keyPadEnter: Key { return Key(rawValue: 15) }
-        public static var a: Key { return Key(rawValue: 16) }
-        public static var c: Key { return Key(rawValue: 17) }
-        public static var v: Key { return Key(rawValue: 18) }
-        public static var x: Key { return Key(rawValue: 19) }
-        public static var y: Key { return Key(rawValue: 20) }
-        public static var z: Key { return Key(rawValue: 21) }
+    public enum Key: Int32, CaseIterable  {
+        case tab = 0
+        case leftArrow = 1
+        case rightArrow = 2
+        case upArrow = 3
+        case downArrow = 4
+        case pageUp = 5
+        case pageDown = 6
+        case home = 7
+        case end = 8
+        case insert = 9
+        case delete = 10
+        case backspace = 11
+        case space = 12
+        case enter = 13
+        case escape = 14
+        case keyPadEnter = 15
+        case a = 16
+        case c = 17
+        case v = 18
+        case x = 19
+        case y = 20
+        case z = 21
     }
 
     public struct KeyModFlags: OptionSet  {
@@ -579,56 +603,36 @@ public enum ImGui {
         public static var `super`: KeyModFlags { return KeyModFlags(rawValue: 8) }
     }
 
-    public struct LayoutType: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var vertical: LayoutType { return LayoutType(rawValue: 1) }
+    public enum LayoutType: Int32, CaseIterable  {
+        case horizontal = 0
+        case vertical = 1
     }
 
-    public struct LogType: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var tTY: LogType { return LogType(rawValue: 1) }
-        public static var file: LogType { return LogType(rawValue: 2) }
-        public static var buffer: LogType { return LogType(rawValue: 3) }
-        public static var clipboard: LogType { return LogType(rawValue: 4) }
+    public enum LogType: Int32, CaseIterable  {
+        case none = 0
+        case tTY = 1
+        case file = 2
+        case buffer = 3
+        case clipboard = 4
     }
 
-    public struct MouseButton: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var right: MouseButton { return MouseButton(rawValue: 1) }
-        public static var middle: MouseButton { return MouseButton(rawValue: 2) }
+    public enum MouseButton: Int32, CaseIterable  {
+        case left = 0
+        case right = 1
+        case middle = 2
     }
 
-    public struct MouseCursor: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var none: MouseCursor { return MouseCursor(rawValue: -1) }
-        public static var textInput: MouseCursor { return MouseCursor(rawValue: 1) }
-        public static var resizeAll: MouseCursor { return MouseCursor(rawValue: 2) }
-        public static var resizeNS: MouseCursor { return MouseCursor(rawValue: 3) }
-        public static var resizeEW: MouseCursor { return MouseCursor(rawValue: 4) }
-        public static var resizeNESW: MouseCursor { return MouseCursor(rawValue: 5) }
-        public static var resizeNWSE: MouseCursor { return MouseCursor(rawValue: 6) }
-        public static var hand: MouseCursor { return MouseCursor(rawValue: 7) }
-        public static var notAllowed: MouseCursor { return MouseCursor(rawValue: 8) }
+    public enum MouseCursor: Int32, CaseIterable  {
+        case none = -1
+        case arrow = 0
+        case textInput = 1
+        case resizeAll = 2
+        case resizeNS = 3
+        case resizeEW = 4
+        case resizeNESW = 5
+        case resizeNWSE = 6
+        case hand = 7
+        case notAllowed = 8
     }
 
     public struct NavDirSourceFlags: OptionSet  {
@@ -641,17 +645,6 @@ public enum ImGui {
         public static var keyboard: NavDirSourceFlags { return NavDirSourceFlags(rawValue: 1) }
         public static var padDPad: NavDirSourceFlags { return NavDirSourceFlags(rawValue: 2) }
         public static var padLStick: NavDirSourceFlags { return NavDirSourceFlags(rawValue: 4) }
-    }
-
-    public struct NavForward: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var forwardQueued: NavForward { return NavForward(rawValue: 1) }
-        public static var forwardActive: NavForward { return NavForward(rawValue: 2) }
     }
 
     public struct NavHighlightFlags: OptionSet  {
@@ -667,43 +660,32 @@ public enum ImGui {
         public static var noRounding: NavHighlightFlags { return NavHighlightFlags(rawValue: 8) }
     }
 
-    public struct NavInput: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var cancel: NavInput { return NavInput(rawValue: 1) }
-        public static var input: NavInput { return NavInput(rawValue: 2) }
-        public static var menu: NavInput { return NavInput(rawValue: 3) }
-        public static var dpadLeft: NavInput { return NavInput(rawValue: 4) }
-        public static var dpadRight: NavInput { return NavInput(rawValue: 5) }
-        public static var dpadUp: NavInput { return NavInput(rawValue: 6) }
-        public static var dpadDown: NavInput { return NavInput(rawValue: 7) }
-        public static var lStickLeft: NavInput { return NavInput(rawValue: 8) }
-        public static var lStickRight: NavInput { return NavInput(rawValue: 9) }
-        public static var lStickUp: NavInput { return NavInput(rawValue: 10) }
-        public static var lStickDown: NavInput { return NavInput(rawValue: 11) }
-        public static var focusPrev: NavInput { return NavInput(rawValue: 12) }
-        public static var focusNext: NavInput { return NavInput(rawValue: 13) }
-        public static var tweakSlow: NavInput { return NavInput(rawValue: 14) }
-        public static var tweakFast: NavInput { return NavInput(rawValue: 15) }
-        public static var keyLeft: NavInput { return NavInput(rawValue: 16) }
-        public static var keyRight: NavInput { return NavInput(rawValue: 17) }
-        public static var keyUp: NavInput { return NavInput(rawValue: 18) }
-        public static var keyDown: NavInput { return NavInput(rawValue: 19) }
-        public static var internalStart: NavInput { return NavInput(rawValue: 16) }
+    public enum NavInput: Int32, CaseIterable  {
+        case activate = 0
+        case cancel = 1
+        case input = 2
+        case menu = 3
+        case dpadLeft = 4
+        case dpadRight = 5
+        case dpadUp = 6
+        case dpadDown = 7
+        case lStickLeft = 8
+        case lStickRight = 9
+        case lStickUp = 10
+        case lStickDown = 11
+        case focusPrev = 12
+        case focusNext = 13
+        case tweakSlow = 14
+        case tweakFast = 15
+        case keyLeft = 16
+        case keyRight = 17
+        case keyUp = 18
+        case keyDown = 19
     }
 
-    public struct NavLayer: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var menu: NavLayer { return NavLayer(rawValue: 1) }
+    public enum NavLayer: Int32, CaseIterable  {
+        case main = 0
+        case menu = 1
     }
 
     public struct NavMoveFlags: OptionSet  {
@@ -720,6 +702,8 @@ public enum ImGui {
         public static var allowCurrentNavId: NavMoveFlags { return NavMoveFlags(rawValue: 16) }
         public static var alsoScoreVisibleSet: NavMoveFlags { return NavMoveFlags(rawValue: 32) }
         public static var scrollToEdge: NavMoveFlags { return NavMoveFlags(rawValue: 64) }
+        public static var forwarded: NavMoveFlags { return NavMoveFlags(rawValue: 128) }
+        public static var debugNoResult: NavMoveFlags { return NavMoveFlags(rawValue: 256) }
     }
 
     public struct NextItemDataFlags: OptionSet  {
@@ -748,6 +732,9 @@ public enum ImGui {
         public static var hasFocus: NextWindowDataFlags { return NextWindowDataFlags(rawValue: 32) }
         public static var hasBgAlpha: NextWindowDataFlags { return NextWindowDataFlags(rawValue: 64) }
         public static var hasScroll: NextWindowDataFlags { return NextWindowDataFlags(rawValue: 128) }
+        public static var hasViewport: NextWindowDataFlags { return NextWindowDataFlags(rawValue: 256) }
+        public static var hasDock: NextWindowDataFlags { return NextWindowDataFlags(rawValue: 512) }
+        public static var hasWindowClass: NextWindowDataFlags { return NextWindowDataFlags(rawValue: 1024) }
     }
 
     public struct OldColumnFlags: OptionSet  {
@@ -764,14 +751,9 @@ public enum ImGui {
         public static var growParentContentsSize: OldColumnFlags { return OldColumnFlags(rawValue: 16) }
     }
 
-    public struct PlotType: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var histogram: PlotType { return PlotType(rawValue: 1) }
+    public enum PlotType: Int32, CaseIterable  {
+        case lines = 0
+        case histogram = 1
     }
 
     public struct PopupFlags: OptionSet  {
@@ -781,6 +763,7 @@ public enum ImGui {
             self.rawValue = rawValue
         }
 
+        public static var mouseButtonLeft: PopupFlags { return PopupFlags(rawValue: 0) }
         public static var mouseButtonRight: PopupFlags { return PopupFlags(rawValue: 1) }
         public static var mouseButtonMiddle: PopupFlags { return PopupFlags(rawValue: 2) }
         public static var mouseButtonMask: PopupFlags { return PopupFlags(rawValue: 31) }
@@ -792,15 +775,10 @@ public enum ImGui {
         public static var anyPopup: PopupFlags { return PopupFlags(rawValue: 384) }
     }
 
-    public struct PopupPositionPolicy: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var comboBox: PopupPositionPolicy { return PopupPositionPolicy(rawValue: 1) }
-        public static var tooltip: PopupPositionPolicy { return PopupPositionPolicy(rawValue: 2) }
+    public enum PopupPositionPolicy: Int32, CaseIterable  {
+        case `default` = 0
+        case comboBox = 1
+        case tooltip = 2
     }
 
     public struct SelectableFlags: OptionSet  {
@@ -871,48 +849,38 @@ public enum ImGui {
         public static var readOnly: SliderFlagsPrivate { return SliderFlagsPrivate(rawValue: 2097152) }
     }
 
-    public struct SortDirection: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var ascending: SortDirection { return SortDirection(rawValue: 1) }
-        public static var descending: SortDirection { return SortDirection(rawValue: 2) }
+    public enum SortDirection: Int32, CaseIterable  {
+        case none = 0
+        case ascending = 1
+        case descending = 2
     }
 
-    public struct StyleVar: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var disabledAlpha: StyleVar { return StyleVar(rawValue: 1) }
-        public static var windowPadding: StyleVar { return StyleVar(rawValue: 2) }
-        public static var windowRounding: StyleVar { return StyleVar(rawValue: 3) }
-        public static var windowBorderSize: StyleVar { return StyleVar(rawValue: 4) }
-        public static var windowMinSize: StyleVar { return StyleVar(rawValue: 5) }
-        public static var windowTitleAlign: StyleVar { return StyleVar(rawValue: 6) }
-        public static var childRounding: StyleVar { return StyleVar(rawValue: 7) }
-        public static var childBorderSize: StyleVar { return StyleVar(rawValue: 8) }
-        public static var popupRounding: StyleVar { return StyleVar(rawValue: 9) }
-        public static var popupBorderSize: StyleVar { return StyleVar(rawValue: 10) }
-        public static var framePadding: StyleVar { return StyleVar(rawValue: 11) }
-        public static var frameRounding: StyleVar { return StyleVar(rawValue: 12) }
-        public static var frameBorderSize: StyleVar { return StyleVar(rawValue: 13) }
-        public static var itemSpacing: StyleVar { return StyleVar(rawValue: 14) }
-        public static var itemInnerSpacing: StyleVar { return StyleVar(rawValue: 15) }
-        public static var indentSpacing: StyleVar { return StyleVar(rawValue: 16) }
-        public static var cellPadding: StyleVar { return StyleVar(rawValue: 17) }
-        public static var scrollbarSize: StyleVar { return StyleVar(rawValue: 18) }
-        public static var scrollbarRounding: StyleVar { return StyleVar(rawValue: 19) }
-        public static var grabMinSize: StyleVar { return StyleVar(rawValue: 20) }
-        public static var grabRounding: StyleVar { return StyleVar(rawValue: 21) }
-        public static var tabRounding: StyleVar { return StyleVar(rawValue: 22) }
-        public static var buttonTextAlign: StyleVar { return StyleVar(rawValue: 23) }
-        public static var selectableTextAlign: StyleVar { return StyleVar(rawValue: 24) }
+    public enum StyleVar: Int32, CaseIterable  {
+        case alpha = 0
+        case disabledAlpha = 1
+        case windowPadding = 2
+        case windowRounding = 3
+        case windowBorderSize = 4
+        case windowMinSize = 5
+        case windowTitleAlign = 6
+        case childRounding = 7
+        case childBorderSize = 8
+        case popupRounding = 9
+        case popupBorderSize = 10
+        case framePadding = 11
+        case frameRounding = 12
+        case frameBorderSize = 13
+        case itemSpacing = 14
+        case itemInnerSpacing = 15
+        case indentSpacing = 16
+        case cellPadding = 17
+        case scrollbarSize = 18
+        case scrollbarRounding = 19
+        case grabMinSize = 20
+        case grabRounding = 21
+        case tabRounding = 22
+        case buttonTextAlign = 23
+        case selectableTextAlign = 24
     }
 
     public struct TabBarFlags: OptionSet  {
@@ -973,18 +941,15 @@ public enum ImGui {
         public static var sectionMask: TabItemFlagsPrivate { return TabItemFlagsPrivate(rawValue: 192) }
         public static var noCloseButton: TabItemFlagsPrivate { return TabItemFlagsPrivate(rawValue: 1048576) }
         public static var button: TabItemFlagsPrivate { return TabItemFlagsPrivate(rawValue: 2097152) }
+        public static var unsorted: TabItemFlagsPrivate { return TabItemFlagsPrivate(rawValue: 4194304) }
+        public static var preview: TabItemFlagsPrivate { return TabItemFlagsPrivate(rawValue: 8388608) }
     }
 
-    public struct TableBgTarget: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Self.RawValue) {
-            self.rawValue = rawValue
-        }
-
-        public static var rowBg0: TableBgTarget { return TableBgTarget(rawValue: 1) }
-        public static var rowBg1: TableBgTarget { return TableBgTarget(rawValue: 2) }
-        public static var cellBg: TableBgTarget { return TableBgTarget(rawValue: 3) }
+    public enum TableBgTarget: Int32, CaseIterable  {
+        case none = 0
+        case rowBg0 = 1
+        case rowBg1 = 2
+        case cellBg = 3
     }
 
     public struct TableColumnFlags: OptionSet  {
@@ -1140,6 +1105,25 @@ public enum ImGui {
         public static var isPlatformWindow: ViewportFlags { return ViewportFlags(rawValue: 1) }
         public static var isPlatformMonitor: ViewportFlags { return ViewportFlags(rawValue: 2) }
         public static var ownedByApp: ViewportFlags { return ViewportFlags(rawValue: 4) }
+        public static var noDecoration: ViewportFlags { return ViewportFlags(rawValue: 8) }
+        public static var noTaskBarIcon: ViewportFlags { return ViewportFlags(rawValue: 16) }
+        public static var noFocusOnAppearing: ViewportFlags { return ViewportFlags(rawValue: 32) }
+        public static var noFocusOnClick: ViewportFlags { return ViewportFlags(rawValue: 64) }
+        public static var noInputs: ViewportFlags { return ViewportFlags(rawValue: 128) }
+        public static var noRendererClear: ViewportFlags { return ViewportFlags(rawValue: 256) }
+        public static var topMost: ViewportFlags { return ViewportFlags(rawValue: 512) }
+        public static var minimized: ViewportFlags { return ViewportFlags(rawValue: 1024) }
+        public static var noAutoMerge: ViewportFlags { return ViewportFlags(rawValue: 2048) }
+        public static var canHostOtherWindows: ViewportFlags { return ViewportFlags(rawValue: 4096) }
+    }
+
+    public enum WindowDockStyleCol: Int32, CaseIterable  {
+        case text = 0
+        case tab = 1
+        case tabHovered = 2
+        case tabActive = 3
+        case tabUnfocused = 4
+        case tabUnfocusedActive = 5
     }
 
     public struct WindowFlags: OptionSet  {
@@ -1169,6 +1153,7 @@ public enum ImGui {
         public static var noNavInputs: WindowFlags { return WindowFlags(rawValue: 262144) }
         public static var noNavFocus: WindowFlags { return WindowFlags(rawValue: 524288) }
         public static var unsavedDocument: WindowFlags { return WindowFlags(rawValue: 1048576) }
+        public static var noDocking: WindowFlags { return WindowFlags(rawValue: 2097152) }
         public static var noNav: WindowFlags { return WindowFlags(rawValue: 786432) }
         public static var noDecoration: WindowFlags { return WindowFlags(rawValue: 43) }
         public static var noInputs: WindowFlags { return WindowFlags(rawValue: 786944) }
@@ -1178,6 +1163,7 @@ public enum ImGui {
         public static var popup: WindowFlags { return WindowFlags(rawValue: 67108864) }
         public static var modal: WindowFlags { return WindowFlags(rawValue: 134217728) }
         public static var childMenu: WindowFlags { return WindowFlags(rawValue: 268435456) }
+        public static var dockNodeHost: WindowFlags { return WindowFlags(rawValue: 536870912) }
     }
 
     public static func acceptDragDropPayload(type: String, flags: DragDropFlags = []) -> UnsafePointer<ImGuiPayload> {
@@ -1189,7 +1175,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func arrowButton(strId str_id: String, dir: Dir) -> Bool {
+    public static func arrowButton(strId str_id: String, dir: Direction) -> Bool {
         return igArrowButton(str_id, dir.rawValue)
     }
 
@@ -1553,6 +1539,18 @@ public enum ImGui {
         igDestroyContext(ctx)
     }
 
+    public static func destroyPlatformWindows() -> Void {
+        igDestroyPlatformWindows()
+    }
+
+    public static func dockSpace(id: ImGuiID, size: SIMD2<Float> = SIMD2<Float>(0, 0), flags: DockNodeFlags = [], windowClass window_class: UnsafePointer<ImGuiWindowClass>? = nil) -> ImGuiID {
+        return igDockSpace(id, ImVec2(size), flags.rawValue, window_class)
+    }
+
+    public static func dockSpaceOverViewport(viewport: UnsafePointer<ImGuiViewport>? = nil, flags: DockNodeFlags = [], windowClass window_class: UnsafePointer<ImGuiWindowClass>? = nil) -> ImGuiID {
+        return igDockSpaceOverViewport(viewport, flags.rawValue, window_class)
+    }
+
     public static var dragDropPayload: UnsafePointer<ImGuiPayload> {
         return igGetDragDropPayload()
     }
@@ -1719,6 +1717,14 @@ public enum ImGui {
         igEndTooltip()
     }
 
+    public static func findViewportByID(id: ImGuiID) -> UnsafeMutablePointer<ImGuiViewport> {
+        return igFindViewportByID(id)
+    }
+
+    public static func findViewportByPlatformHandle(platformHandle platform_handle: UnsafeMutableRawPointer) -> UnsafeMutablePointer<ImGuiViewport> {
+        return igFindViewportByPlatformHandle(platform_handle)
+    }
+
     public static var font: UnsafeMutablePointer<ImFont> {
         return igGetFont()
     }
@@ -1753,6 +1759,10 @@ public enum ImGui {
         igGetAllocatorFunctions(&p_alloc_func, &p_free_func, &p_user_data)
     }
 
+    public static func getBackgroundDrawList(viewport: UnsafeMutablePointer<ImGuiViewport>) -> UnsafeMutablePointer<ImDrawList> {
+        return igGetBackgroundDrawList_ViewportPtr(viewport)
+    }
+
     public static func getColorU32(idx: Color, alphaMul alpha_mul: Float = 1.0) -> UInt32 {
         return igGetColorU32_Col(idx.rawValue, alpha_mul)
     }
@@ -1771,6 +1781,10 @@ public enum ImGui {
 
     public static func getColumnWidth(columnIndex column_index: Int = -1) -> Float {
         return igGetColumnWidth(Int32(column_index))
+    }
+
+    public static func getForegroundDrawList(viewport: UnsafeMutablePointer<ImGuiViewport>) -> UnsafeMutablePointer<ImDrawList> {
+        return igGetForegroundDrawList_ViewportPtr(viewport)
     }
 
     public static func getID(strId str_id: String) -> ImGuiID {
@@ -1793,7 +1807,7 @@ public enum ImGui {
         return igGetKeyPressedAmount(Int32(key_index), repeat_delay, rate)
     }
 
-    public static func getMouseDragDelta(button: MouseButton = [], lockThreshold lock_threshold: Float = -1.0) -> SIMD2<Float> {
+    public static func getMouseDragDelta(button: MouseButton = MouseButton(rawValue: 0)!, lockThreshold lock_threshold: Float = -1.0) -> SIMD2<Float> {
         var pOut = ImVec2()
         igGetMouseDragDelta(&pOut, button.rawValue, lock_threshold)
         return (SIMD2<Float>(pOut))
@@ -1938,7 +1952,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func isItemClicked(mouseButton mouse_button: MouseButton = []) -> Bool {
+    public static func isItemClicked(mouseButton mouse_button: MouseButton = MouseButton(rawValue: 0)!) -> Bool {
         return igIsItemClicked(mouse_button.rawValue)
     }
 
@@ -2042,6 +2056,10 @@ public enum ImGui {
 
     public static var isWindowCollapsed: Bool {
         return igIsWindowCollapsed()
+    }
+
+    public static var isWindowDocked: Bool {
+        return igIsWindowDocked()
     }
 
     @discardableResult
@@ -2150,7 +2168,7 @@ public enum ImGui {
 
     public static var mouseCursor: MouseCursor {
         get {
-            return MouseCursor(rawValue: igGetMouseCursor())
+            return MouseCursor(rawValue: igGetMouseCursor())!
         }
         set(cursor_type) {
             igSetMouseCursor(cursor_type.rawValue)
@@ -2191,6 +2209,10 @@ public enum ImGui {
 
     public static func openPopupOnItemClick(strId str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Void {
         igOpenPopupOnItemClick(str_id, popup_flags.rawValue)
+    }
+
+    public static var platformIO: UnsafeMutablePointer<ImGuiPlatformIO> {
+        return igGetPlatformIO()
     }
 
     public static func plotHistogram(label: String, values: UnsafePointer<Float>, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0), stride: Int = MemoryLayout<Float>.stride) -> Void {
@@ -2321,7 +2343,11 @@ public enum ImGui {
         igRender()
     }
 
-    public static func resetMouseDragDelta(button: MouseButton = []) -> Void {
+    public static func renderPlatformWindowsDefault(platformRenderArg platform_render_arg: UnsafeMutableRawPointer? = nil, rendererRenderArg renderer_render_arg: UnsafeMutableRawPointer? = nil) -> Void {
+        igRenderPlatformWindowsDefault(platform_render_arg, renderer_render_arg)
+    }
+
+    public static func resetMouseDragDelta(button: MouseButton = MouseButton(rawValue: 0)!) -> Void {
         igResetMouseDragDelta(button.rawValue)
     }
 
@@ -2394,7 +2420,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func setDragDropPayload(type: String, data: UnsafeRawPointer, sz: Int, cond: Cond = []) -> Bool {
+    public static func setDragDropPayload(type: String, data: UnsafeRawPointer, sz: Int, cond: Condition = []) -> Bool {
         return igSetDragDropPayload(type, data, sz, cond.rawValue)
     }
 
@@ -2410,7 +2436,7 @@ public enum ImGui {
         igSetKeyboardFocusHere(Int32(offset))
     }
 
-    public static func setNextItemOpen(isOpen is_open: Bool, cond: Cond = []) -> Void {
+    public static func setNextItemOpen(isOpen is_open: Bool, cond: Condition = []) -> Void {
         igSetNextItemOpen(is_open, cond.rawValue)
     }
 
@@ -2422,7 +2448,11 @@ public enum ImGui {
         igSetNextWindowBgAlpha(alpha)
     }
 
-    public static func setNextWindowCollapsed(collapsed: Bool, cond: Cond = []) -> Void {
+    public static func setNextWindowClass(windowClass window_class: UnsafePointer<ImGuiWindowClass>) -> Void {
+        igSetNextWindowClass(window_class)
+    }
+
+    public static func setNextWindowCollapsed(collapsed: Bool, cond: Condition = []) -> Void {
         igSetNextWindowCollapsed(collapsed, cond.rawValue)
     }
 
@@ -2430,20 +2460,28 @@ public enum ImGui {
         igSetNextWindowContentSize(ImVec2(size))
     }
 
+    public static func setNextWindowDockID(dockId dock_id: ImGuiID, cond: Condition = []) -> Void {
+        igSetNextWindowDockID(dock_id, cond.rawValue)
+    }
+
     public static func setNextWindowFocus() -> Void {
         igSetNextWindowFocus()
     }
 
-    public static func setNextWindowPos(position pos: SIMD2<Float>, cond: Cond = [], pivot: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Void {
+    public static func setNextWindowPos(position pos: SIMD2<Float>, cond: Condition = [], pivot: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Void {
         igSetNextWindowPos(ImVec2(pos), cond.rawValue, ImVec2(pivot))
     }
 
-    public static func setNextWindowSize(size: SIMD2<Float>, cond: Cond = []) -> Void {
+    public static func setNextWindowSize(size: SIMD2<Float>, cond: Condition = []) -> Void {
         igSetNextWindowSize(ImVec2(size), cond.rawValue)
     }
 
     public static func setNextWindowSizeConstraints(sizeMin size_min: SIMD2<Float>, sizeMax size_max: SIMD2<Float>, customCallback custom_callback: ImGuiSizeCallback? = nil, customCallbackData custom_callback_data: UnsafeMutableRawPointer? = nil) -> Void {
         igSetNextWindowSizeConstraints(ImVec2(size_min), ImVec2(size_max), custom_callback, custom_callback_data)
+    }
+
+    public static func setNextWindowViewport(viewportId viewport_id: ImGuiID) -> Void {
+        igSetNextWindowViewport(viewport_id)
     }
 
     public static func setScrollFromPosX(localX local_x: Float, centerXRatio center_x_ratio: Float = 0.5) -> Void {
@@ -2472,11 +2510,11 @@ public enum ImGui {
         }
     }
 
-    public static func setWindowCollapsed(collapsed: Bool, cond: Cond = []) -> Void {
+    public static func setWindowCollapsed(collapsed: Bool, cond: Condition = []) -> Void {
         igSetWindowCollapsed_Bool(collapsed, cond.rawValue)
     }
 
-    public static func setWindowCollapsed(name: String, collapsed: Bool, cond: Cond = []) -> Void {
+    public static func setWindowCollapsed(name: String, collapsed: Bool, cond: Condition = []) -> Void {
         igSetWindowCollapsed_Str(name, collapsed, cond.rawValue)
     }
 
@@ -2492,19 +2530,19 @@ public enum ImGui {
         igSetWindowFontScale(scale)
     }
 
-    public static func setWindowPos(position pos: SIMD2<Float>, cond: Cond = []) -> Void {
+    public static func setWindowPos(position pos: SIMD2<Float>, cond: Condition = []) -> Void {
         igSetWindowPos_Vec2(ImVec2(pos), cond.rawValue)
     }
 
-    public static func setWindowPos(name: String, position pos: SIMD2<Float>, cond: Cond = []) -> Void {
+    public static func setWindowPos(name: String, position pos: SIMD2<Float>, cond: Condition = []) -> Void {
         igSetWindowPos_Str(name, ImVec2(pos), cond.rawValue)
     }
 
-    public static func setWindowSize(size: SIMD2<Float>, cond: Cond = []) -> Void {
+    public static func setWindowSize(size: SIMD2<Float>, cond: Condition = []) -> Void {
         igSetWindowSize_Vec2(ImVec2(size), cond.rawValue)
     }
 
-    public static func setWindowSize(name: String, size: SIMD2<Float>, cond: Cond = []) -> Void {
+    public static func setWindowSize(name: String, size: SIMD2<Float>, cond: Condition = []) -> Void {
         igSetWindowSize_Str(name, ImVec2(size), cond.rawValue)
     }
 
@@ -2804,6 +2842,10 @@ public enum ImGui {
         igUnindent(indent_w)
     }
 
+    public static func updatePlatformWindows() -> Void {
+        igUpdatePlatformWindows()
+    }
+
     @discardableResult
     public static func vSliderFloat(label: String, size: SIMD2<Float>, value v: inout Float, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return igVSliderFloat(label, ImVec2(size), &v, v_min, v_max, format, flags.rawValue)
@@ -2853,8 +2895,12 @@ public enum ImGui {
         return (SIMD2<Float>(pOut))
     }
 
-    public static var windowContentRegionWidth: Float {
-        return igGetWindowContentRegionWidth()
+    public static var windowDockID: ImGuiID {
+        return igGetWindowDockID()
+    }
+
+    public static var windowDpiScale: Float {
+        return igGetWindowDpiScale()
     }
 
     public static var windowDrawList: UnsafeMutablePointer<ImDrawList> {
@@ -2875,6 +2921,10 @@ public enum ImGui {
         var pOut = ImVec2()
         igGetWindowSize(&pOut)
         return (SIMD2<Float>(pOut))
+    }
+
+    public static var windowViewport: UnsafeMutablePointer<ImGuiViewport> {
+        return igGetWindowViewport()
     }
 
     public static var windowWidth: Float {
@@ -3491,6 +3541,10 @@ extension ImGuiIO {
 
     public mutating func clearInputCharacters() -> Void {
         ImGuiIO_ClearInputCharacters(&self)
+    }
+
+    public mutating func clearInputKeys() -> Void {
+        ImGuiIO_ClearInputKeys(&self)
     }
 
 }

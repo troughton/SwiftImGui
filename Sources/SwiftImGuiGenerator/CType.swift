@@ -13,11 +13,17 @@ final class CTypeStruct: Hashable {
         var type: CType
         var isStatic: Bool
         var computedPropertyText: String?
+        var rawValue: Int?
         
-        func text(in namespace: String?) -> String {
-            var declaration = "public \(isStatic ? "static " : "")var \(name): \(type.swiftTypeName(in: namespace))"
-            if let computedPropertyText = self.computedPropertyText {
-                declaration += " { return \(computedPropertyText) }"
+        func text(in namespace: String?, parentType: CTypeStruct) -> String {
+            var declaration: String
+            if parentType.isEnum, self.isStatic, let rawValue = self.rawValue {
+                declaration = "case \(name) = \(rawValue)"
+            } else {
+                declaration = "public \(isStatic ? "static " : "")var \(name): \(type.swiftTypeName(in: namespace))"
+                if let rawValue = self.rawValue {
+                    declaration += " { return \(parentType.name)(rawValue: \(rawValue)) }"
+                }
             }
             return declaration
         }
@@ -26,7 +32,7 @@ final class CTypeStruct: Hashable {
     let name: String
     var namespace: String?
     var members: [Member] = []
-    var isOptionSet: Bool = false
+    var isOptionSetOrEnum: Bool = false
     
     static var namedTypes = [String: CTypeStruct]()
     
@@ -34,12 +40,29 @@ final class CTypeStruct: Hashable {
         self.name = name
     }
     
-    static func named(_ name: String, isOptionSet: Bool = false) -> CTypeStruct {
+    var isOptionSet: Bool {
+        if !self.isOptionSetOrEnum {
+            return false
+        }
+        
+        if self.name.contains("Flags") {
+            return true
+        }
+        
+        let staticMembers: [Int] = self.members.lazy.filter { $0.isStatic && $0.rawValue != 0 }.map { $0.rawValue! }
+        return staticMembers.count > 2 && zip(staticMembers, staticMembers.dropFirst()).prefix(2).allSatisfy { $0 * 2 == $1 }
+    }
+    
+    var isEnum: Bool {
+        return self.isOptionSetOrEnum && !self.isOptionSet
+    }
+    
+    static func named(_ name: String, isOptionSetOrEnum: Bool = false) -> CTypeStruct {
         var originalName = name
         
         var name = name
         var namespace = nil as String?
-        if isOptionSet {
+        if isOptionSetOrEnum {
             if name.starts(with: "ImGui") {
                 name = String(name.dropFirst(5))
                 namespace = "ImGui"
@@ -54,6 +77,10 @@ final class CTypeStruct: Hashable {
         }
         if name == "Col" {
             name = "Color"
+        } else if name == "Cond" {
+            name = "Condition"
+        } else if name == "Dir" {
+            name = "Direction"
         }
         
         if let type = CTypeStruct.namedTypes[name] {
@@ -62,17 +89,17 @@ final class CTypeStruct: Hashable {
         }
         let typeStruct = CTypeStruct(name: name)
         typeStruct.namespace = namespace
-        typeStruct.isOptionSet = isOptionSet
+        typeStruct.isOptionSetOrEnum = isOptionSetOrEnum
         CTypeStruct.namedTypes[name] = typeStruct
         CTypeStruct.namedTypes[originalName] = typeStruct
         return typeStruct
     }
     
     public func print(to reflectionPrinter: inout ReflectionPrinter) {
-        reflectionPrinter.print("public struct \(self.name)\(self.isOptionSet ? ": OptionSet " : "") {")
+        reflectionPrinter.print("public \(self.isEnum ? "enum" : "struct") \(self.name)\(self.isOptionSet ? ": OptionSet " : "")\(self.isEnum ? ": Int32, CaseIterable " : "") {")
         
-        for member in self.members where member.computedPropertyText == nil {
-            reflectionPrinter.print(member.text(in: self.namespace))
+        for member in self.members where !member.isStatic {
+            reflectionPrinter.print(member.text(in: self.namespace, parentType: self))
         }
         
         if self.isOptionSet {
@@ -86,8 +113,8 @@ final class CTypeStruct: Hashable {
             reflectionPrinter.newLine()
         }
         
-        for member in self.members where member.computedPropertyText != nil {
-            reflectionPrinter.print(member.text(in: self.namespace))
+        for member in self.members where member.isStatic {
+            reflectionPrinter.print(member.text(in: self.namespace, parentType: self))
         }
         
         reflectionPrinter.print("}")
@@ -383,8 +410,8 @@ indirect enum CType: Decodable {
         return nil
     }
     
-    var isOptionSet: Bool {
-        if case .struct(let structRef) = self, structRef.isOptionSet {
+    var isOptionSetOrEnum: Bool {
+        if case .struct(let structRef) = self, structRef.isOptionSetOrEnum {
             return true
         }
         return false
@@ -403,7 +430,7 @@ indirect enum CType: Decodable {
             return true
         case .constPointer(to: let type) where type.hasDifferingSwiftType:
             return true
-        case .struct(let type) where type.isOptionSet:
+        case .struct(let type) where type.isOptionSetOrEnum:
             return true
         default:
             return false
@@ -423,7 +450,7 @@ indirect enum CType: Decodable {
             case .intArgument:
                 return "Int(\(inputValue))"
             case .struct(let type):
-                return "\(type.name)(rawValue: \(inputValue))"
+                return "\(type.name)(rawValue: \(inputValue))\(type.isEnum ? "!" : "")"
             default:
                 break
             }
@@ -453,6 +480,8 @@ indirect enum CType: Decodable {
         switch (self, defaultValue) {
         case (.struct(let structType), "0") where structType.isOptionSet:
             return "[]" // OptionSet
+        case (.struct(let structType), let value) where structType.isEnum:
+            return "\(structType.name)(rawValue: \(value))!"
         case (.struct(let structType), let value) where structType.isOptionSet:
             return "\(structType.name)(rawValue: \(value))"
         case (.float, "FLT_MIN"):
