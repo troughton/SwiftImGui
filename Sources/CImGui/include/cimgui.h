@@ -1833,6 +1833,7 @@ struct ImGuiDockNode
     ImGuiWindow* VisibleWindow;
     ImGuiDockNode* CentralNode;
     ImGuiDockNode* OnlyNodeWithWindows;
+    int CountNodeWithWindows;
     int LastFrameAlive;
     int LastFrameActive;
     int LastFrameFocused;
@@ -1846,6 +1847,7 @@ struct ImGuiDockNode
     bool IsFocused :1;
     bool HasCloseButton :1;
     bool HasWindowMenuButton :1;
+    bool HasCentralNodeChild :1;
     bool WantCloseAll :1;
     bool WantLockSizeOnce :1;
     bool WantMouseMove :1;
