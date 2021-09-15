@@ -48,7 +48,7 @@ public enum ImGui {
     public struct ActivateFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -66,7 +66,7 @@ public enum ImGui {
     public struct BackendFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -82,7 +82,7 @@ public enum ImGui {
     public struct ButtonFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -96,7 +96,7 @@ public enum ImGui {
     public struct ButtonFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -180,7 +180,7 @@ public enum ImGui {
     public struct ColorEditFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -217,7 +217,7 @@ public enum ImGui {
     public struct ComboFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -234,7 +234,7 @@ public enum ImGui {
     public struct ComboFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -244,7 +244,7 @@ public enum ImGui {
     public struct Condition: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -257,7 +257,7 @@ public enum ImGui {
     public struct ConfigFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -322,7 +322,7 @@ public enum ImGui {
     public struct DockNodeFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -337,7 +337,7 @@ public enum ImGui {
     public struct DockNodeFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -372,7 +372,7 @@ public enum ImGui {
     public struct DragDropFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -391,7 +391,7 @@ public enum ImGui {
     public struct DrawFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -413,7 +413,7 @@ public enum ImGui {
     public struct DrawListFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -426,7 +426,7 @@ public enum ImGui {
     public struct FocusedFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -440,7 +440,7 @@ public enum ImGui {
     public struct FontAtlasFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -452,7 +452,7 @@ public enum ImGui {
     public struct HoveredFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -489,7 +489,7 @@ public enum ImGui {
     public struct InputTextFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -518,7 +518,7 @@ public enum ImGui {
     public struct InputTextFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -530,7 +530,7 @@ public enum ImGui {
     public struct ItemFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -548,7 +548,7 @@ public enum ImGui {
     public struct ItemStatusFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -593,7 +593,7 @@ public enum ImGui {
     public struct KeyModFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -638,7 +638,7 @@ public enum ImGui {
     public struct NavDirSourceFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -650,7 +650,7 @@ public enum ImGui {
     public struct NavHighlightFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -691,7 +691,7 @@ public enum ImGui {
     public struct NavMoveFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -709,7 +709,7 @@ public enum ImGui {
     public struct NextItemDataFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -720,7 +720,7 @@ public enum ImGui {
     public struct NextWindowDataFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -740,7 +740,7 @@ public enum ImGui {
     public struct OldColumnFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -759,7 +759,7 @@ public enum ImGui {
     public struct PopupFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -784,7 +784,7 @@ public enum ImGui {
     public struct SelectableFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -798,7 +798,7 @@ public enum ImGui {
     public struct SelectableFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -815,7 +815,7 @@ public enum ImGui {
     public struct SeparatorFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -827,7 +827,7 @@ public enum ImGui {
     public struct SliderFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -841,7 +841,7 @@ public enum ImGui {
     public struct SliderFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -886,7 +886,7 @@ public enum ImGui {
     public struct TabBarFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -905,7 +905,7 @@ public enum ImGui {
     public struct TabBarFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -917,7 +917,7 @@ public enum ImGui {
     public struct TabItemFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -934,7 +934,7 @@ public enum ImGui {
     public struct TabItemFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -955,7 +955,7 @@ public enum ImGui {
     public struct TableColumnFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -990,7 +990,7 @@ public enum ImGui {
     public struct TableFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -1034,7 +1034,7 @@ public enum ImGui {
     public struct TableRowFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -1044,7 +1044,7 @@ public enum ImGui {
     public struct TextFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -1054,7 +1054,7 @@ public enum ImGui {
     public struct TooltipFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -1064,7 +1064,7 @@ public enum ImGui {
     public struct TreeNodeFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -1088,7 +1088,7 @@ public enum ImGui {
     public struct TreeNodeFlagsPrivate: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -1098,7 +1098,7 @@ public enum ImGui {
     public struct ViewportFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -1129,7 +1129,7 @@ public enum ImGui {
     public struct WindowFlags: OptionSet  {
         public var rawValue: Int32
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
@@ -1166,7 +1166,7 @@ public enum ImGui {
         public static var dockNodeHost: WindowFlags { return WindowFlags(rawValue: 536870912) }
     }
 
-    public static func acceptDragDropPayload(type: String, flags: DragDropFlags = []) -> UnsafePointer<ImGuiPayload> {
+    public static func acceptDragDropPayload(type: String, flags: DragDropFlags = []) -> UnsafePointer<ImGuiPayload>! {
         return igAcceptDragDropPayload(type, flags.rawValue)
     }
 
@@ -1175,11 +1175,11 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func arrowButton(strId str_id: String, dir: Direction) -> Bool {
+    public static func arrowButton(_ str_id: String, dir: Direction) -> Bool {
         return igArrowButton(str_id, dir.rawValue)
     }
 
-    public static var backgroundDrawList: UnsafeMutablePointer<ImDrawList> {
+    public static var backgroundDrawList: UnsafeMutablePointer<ImDrawList>! {
         return igGetBackgroundDrawList_Nil()
     }
 
@@ -1189,7 +1189,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func beginChild(strId str_id: String, size: SIMD2<Float> = SIMD2<Float>(0, 0), border: Bool = false, flags: WindowFlags = []) -> Bool {
+    public static func beginChild(_ str_id: String, size: SIMD2<Float> = SIMD2<Float>(0, 0), border: Bool = false, flags: WindowFlags = []) -> Bool {
         return igBeginChild_Str(str_id, ImVec2(size), border, flags.rawValue)
     }
 
@@ -1208,7 +1208,7 @@ public enum ImGui {
         return igBeginCombo(label, preview_value, flags.rawValue)
     }
 
-    public static func beginDisabled(disabled: Bool = true) -> Void {
+    public static func beginDisabled(_ disabled: Bool = true) -> Void {
         igBeginDisabled(disabled)
     }
 
@@ -1244,22 +1244,22 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func beginPopup(strId str_id: String, flags: WindowFlags = []) -> Bool {
+    public static func beginPopup(_ str_id: String, flags: WindowFlags = []) -> Bool {
         return igBeginPopup(str_id, flags.rawValue)
     }
 
     @discardableResult
-    public static func beginPopupContextItem(strId str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Bool {
+    public static func beginPopupContextItem(_ str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Bool {
         return igBeginPopupContextItem(str_id, popup_flags.rawValue)
     }
 
     @discardableResult
-    public static func beginPopupContextVoid(strId str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Bool {
+    public static func beginPopupContextVoid(_ str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Bool {
         return igBeginPopupContextVoid(str_id, popup_flags.rawValue)
     }
 
     @discardableResult
-    public static func beginPopupContextWindow(strId str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Bool {
+    public static func beginPopupContextWindow(_ str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Bool {
         return igBeginPopupContextWindow(str_id, popup_flags.rawValue)
     }
 
@@ -1269,7 +1269,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func beginTabBar(strId str_id: String, flags: TabBarFlags = []) -> Bool {
+    public static func beginTabBar(_ str_id: String, flags: TabBarFlags = []) -> Bool {
         return igBeginTabBar(str_id, flags.rawValue)
     }
 
@@ -1279,7 +1279,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func beginTable(strId str_id: String, column: Int, flags: TableFlags = [], outerSize outer_size: SIMD2<Float> = SIMD2<Float>(0.0, 0.0), innerWidth inner_width: Float = 0.0) -> Bool {
+    public static func beginTable(_ str_id: String, column: Int, outerSize outer_size: SIMD2<Float> = SIMD2<Float>(0.0, 0.0), innerWidth inner_width: Float = 0.0, flags: TableFlags = []) -> Bool {
         return igBeginTable(str_id, Int32(column), flags.rawValue, ImVec2(outer_size), inner_width)
     }
 
@@ -1291,7 +1291,7 @@ public enum ImGui {
         igBullet()
     }
 
-    public static func bulletText(format fmt: String) -> Void {
+    public static func bulletText(_ fmt: String) -> Void {
         withVaList([]) { args in
             igBulletTextV(fmt, args)
         }
@@ -1333,14 +1333,14 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func checkboxFlags(label: String, flagsTemp: inout Int, flagsValue flags_value: Int) -> Bool {
+    public static func checkbox(label: String, flagsValue flags_value: Int, flagsTemp: inout Int) -> Bool {
         var flags = Int32(flagsTemp)
         defer { flagsTemp = Int(flags) }
         return igCheckboxFlags_IntPtr(label, &flags, Int32(flags_value))
     }
 
     @discardableResult
-    public static func checkboxFlags(label: String, flags: inout UInt32, flagsValue flags_value: UInt32) -> Bool {
+    public static func checkbox(label: String, flagsValue flags_value: UInt32, flags: inout UInt32) -> Bool {
         return igCheckboxFlags_UintPtr(label, &flags, flags_value)
     }
 
@@ -1368,7 +1368,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func colorButton(descriptionId desc_id: String, color col: SIMD4<Float>, flags: ColorEditFlags = [], size: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Bool {
+    public static func colorButton(descriptionId desc_id: String, color col: SIMD4<Float>, size: SIMD2<Float> = SIMD2<Float>(0, 0), flags: ColorEditFlags = []) -> Bool {
         return igColorButton(desc_id, ImVec4(col), flags.rawValue, ImVec2(size))
     }
 
@@ -1399,28 +1399,28 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func colorEdit3(label: String, color col: inout SIMD3<Float>, flags: ColorEditFlags = []) -> Bool {
+    public static func colorEdit(label: String, color col: inout SIMD3<Float>, flags: ColorEditFlags = []) -> Bool {
         return col.withMutableMemberPointer { col in
             return igColorEdit3(label, col, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func colorEdit4(label: String, color col: inout SIMD4<Float>, flags: ColorEditFlags = []) -> Bool {
+    public static func colorEdit(label: String, color col: inout SIMD4<Float>, flags: ColorEditFlags = []) -> Bool {
         return col.withMutableMemberPointer { col in
             return igColorEdit4(label, col, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func colorPicker3(label: String, color col: inout SIMD3<Float>, flags: ColorEditFlags = []) -> Bool {
+    public static func colorPicker(label: String, color col: inout SIMD3<Float>, flags: ColorEditFlags = []) -> Bool {
         return col.withMutableMemberPointer { col in
             return igColorPicker3(label, col, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func colorPicker4(label: String, color col: inout SIMD4<Float>, flags: ColorEditFlags = [], refColor ref_col: UnsafePointer<Float>? = nil) -> Bool {
+    public static func colorPicker(label: String, color col: inout SIMD4<Float>, refColor ref_col: UnsafePointer<Float>? = nil, flags: ColorEditFlags = []) -> Bool {
         return col.withMutableMemberPointer { col in
             return igColorPicker4(label, col, flags.rawValue, ref_col)
         }
@@ -1439,7 +1439,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func combo(label: String, currentItem current_itemTemp: inout Int, items: UnsafePointer<UnsafePointer<CChar>?>, itemsCount items_count: Int, popupMaxHeightInItems popup_max_height_in_items: Int = -1) -> Bool {
+    public static func combo(label: String, currentItem current_itemTemp: inout Int, items: UnsafePointer<UnsafePointer<CChar>?>!, itemsCount items_count: Int, popupMaxHeightInItems popup_max_height_in_items: Int = -1) -> Bool {
         var current_item = Int32(current_itemTemp)
         defer { current_itemTemp = Int(current_item) }
         return igCombo_Str_arr(label, &current_item, items, Int32(items_count), Int32(popup_max_height_in_items))
@@ -1453,13 +1453,13 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func combo(label: String, currentItem current_itemTemp: inout Int, itemsGetter items_getter: @escaping @convention(c) (_ data: UnsafeMutableRawPointer?, _ index: Int32, _ outText: UnsafeMutablePointer<UnsafePointer<CChar>?>?) -> Bool, data: UnsafeMutableRawPointer, itemsCount items_count: Int, popupMaxHeightInItems popup_max_height_in_items: Int = -1) -> Bool {
+    public static func combo(label: String, currentItem current_itemTemp: inout Int, itemsGetter items_getter: @escaping @convention(c) (_ data: UnsafeMutableRawPointer?, _ index: Int32, _ outText: UnsafeMutablePointer<UnsafePointer<CChar>?>?) -> Bool, data: UnsafeMutableRawPointer!, itemsCount items_count: Int, popupMaxHeightInItems popup_max_height_in_items: Int = -1) -> Bool {
         var current_item = Int32(current_itemTemp)
         defer { current_itemTemp = Int(current_item) }
         return igCombo_FnBoolPtr(label, &current_item, items_getter, data, Int32(items_count), Int32(popup_max_height_in_items))
     }
 
-    public static var contentRegionAvail: SIMD2<Float> {
+    public static var contentRegionAvailable: SIMD2<Float> {
         var pOut = ImVec2()
         igGetContentRegionAvail(&pOut)
         return (SIMD2<Float>(pOut))
@@ -1471,11 +1471,11 @@ public enum ImGui {
         return (SIMD2<Float>(pOut))
     }
 
-    public static func createContext(sharedFontAtlas shared_font_atlas: UnsafeMutablePointer<ImFontAtlas>? = nil) -> UnsafeMutablePointer<ImGuiContext> {
+    public static func createContext(sharedFontAtlas shared_font_atlas: UnsafeMutablePointer<ImFontAtlas>? = nil) -> UnsafeMutablePointer<ImGuiContext>! {
         return igCreateContext(shared_font_atlas)
     }
 
-    public static var currentContext: UnsafeMutablePointer<ImGuiContext> {
+    public static var currentContext: UnsafeMutablePointer<ImGuiContext>! {
         get {
             return igGetCurrentContext()
         }
@@ -1535,7 +1535,7 @@ public enum ImGui {
         return igDebugCheckVersionAndDataLayout(version_str, sz_io, sz_style, sz_vec2, sz_vec4, sz_drawvert, sz_drawidx)
     }
 
-    public static func destroyContext(ctx: UnsafeMutablePointer<ImGuiContext>? = nil) -> Void {
+    public static func destroyContext(_ ctx: UnsafeMutablePointer<ImGuiContext>? = nil) -> Void {
         igDestroyContext(ctx)
     }
 
@@ -1543,79 +1543,75 @@ public enum ImGui {
         igDestroyPlatformWindows()
     }
 
-    public static func dockSpace(id: ImGuiID, size: SIMD2<Float> = SIMD2<Float>(0, 0), flags: DockNodeFlags = [], windowClass window_class: UnsafePointer<ImGuiWindowClass>? = nil) -> ImGuiID {
+    public static func dockSpace(id: ImGuiID, size: SIMD2<Float> = SIMD2<Float>(0, 0), windowClass window_class: UnsafePointer<ImGuiWindowClass>? = nil, flags: DockNodeFlags = []) -> ImGuiID {
         return igDockSpace(id, ImVec2(size), flags.rawValue, window_class)
     }
 
-    public static func dockSpaceOverViewport(viewport: UnsafePointer<ImGuiViewport>? = nil, flags: DockNodeFlags = [], windowClass window_class: UnsafePointer<ImGuiWindowClass>? = nil) -> ImGuiID {
+    public static func dockSpaceOverViewport(_ viewport: UnsafePointer<ImGuiViewport>? = nil, windowClass window_class: UnsafePointer<ImGuiWindowClass>? = nil, flags: DockNodeFlags = []) -> ImGuiID {
         return igDockSpaceOverViewport(viewport, flags.rawValue, window_class)
     }
 
-    public static var dragDropPayload: UnsafePointer<ImGuiPayload> {
-        return igGetDragDropPayload()
-    }
-
     @discardableResult
-    public static func dragFloat(label: String, value v: inout Float, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, value v: inout Float, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return igDragFloat(label, &v, v_speed, v_min, v_max, format, flags.rawValue)
     }
 
     @discardableResult
-    public static func dragFloat2(label: String, value v: inout SIMD2<Float>, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, value v: inout SIMD2<Float>, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igDragFloat2(label, v, v_speed, v_min, v_max, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func dragFloat3(label: String, value v: inout SIMD3<Float>, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, value v: inout SIMD3<Float>, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igDragFloat3(label, v, v_speed, v_min, v_max, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func dragFloat4(label: String, value v: inout SIMD4<Float>, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, value v: inout SIMD4<Float>, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igDragFloat4(label, v, v_speed, v_min, v_max, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func dragFloatRange2(label: String, currentMin v_current_min: inout Float, currentMax v_current_max: inout Float, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", formatMax format_max: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, currentMin v_current_min: inout Float, currentMax v_current_max: inout Float, speed v_speed: Float = 1.0, min v_min: Float = 0.0, max v_max: Float = 0.0, format: String = "%.3f", formatMax format_max: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
         return igDragFloatRange2(label, &v_current_min, &v_current_max, v_speed, v_min, v_max, format, format_max, flags.rawValue)
     }
 
     @discardableResult
-    public static func dragInt(label: String, value vTemp: inout Int, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, value vTemp: inout Int, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", flags: SliderFlags = []) -> Bool {
         var v = Int32(vTemp)
         defer { vTemp = Int(v) }
         return igDragInt(label, &v, v_speed, Int32(v_min), Int32(v_max), format, flags.rawValue)
     }
 
     @discardableResult
-    public static func dragInt2(label: String, value v: inout SIMD2<Int32>, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, value v: inout SIMD2<Int32>, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igDragInt2(label, v, v_speed, Int32(v_min), Int32(v_max), format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func dragInt3(label: String, value v: inout SIMD3<Int32>, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, value v: inout SIMD3<Int32>, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igDragInt3(label, v, v_speed, Int32(v_min), Int32(v_max), format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func dragInt4(label: String, value v: inout SIMD4<Int32>, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, value v: inout SIMD4<Int32>, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igDragInt4(label, v, v_speed, Int32(v_min), Int32(v_max), format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func dragIntRange2(label: String, currentMin v_current_minTemp: inout Int, currentMax v_current_maxTemp: inout Int, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", formatMax format_max: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, currentMin v_current_minTemp: inout Int, currentMax v_current_maxTemp: inout Int, speed v_speed: Float = 1.0, min v_min: Int = 0, max v_max: Int = 0, format: String = "%d", formatMax format_max: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
         var v_current_min = Int32(v_current_minTemp)
         defer { v_current_minTemp = Int(v_current_min) }
         var v_current_max = Int32(v_current_maxTemp)
@@ -1624,20 +1620,24 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func dragScalar(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer, speed v_speed: Float = 1.0, pMin p_min: UnsafeRawPointer? = nil, pMax p_max: UnsafeRawPointer? = nil, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer!, speed v_speed: Float = 1.0, pMin p_min: UnsafeRawPointer? = nil, pMax p_max: UnsafeRawPointer? = nil, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
         return igDragScalar(label, data_type.rawValue, p_data, v_speed, p_min, p_max, format, flags.rawValue)
     }
 
     @discardableResult
-    public static func dragScalarN(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer, components: Int, speed v_speed: Float = 1.0, pMin p_min: UnsafeRawPointer? = nil, pMax p_max: UnsafeRawPointer? = nil, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
+    public static func drag(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer!, components: Int, speed v_speed: Float = 1.0, pMin p_min: UnsafeRawPointer? = nil, pMax p_max: UnsafeRawPointer? = nil, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
         return igDragScalarN(label, data_type.rawValue, p_data, Int32(components), v_speed, p_min, p_max, format, flags.rawValue)
     }
 
-    public static var drawData: UnsafeMutablePointer<ImDrawData> {
+    public static var dragDropPayload: UnsafePointer<ImGuiPayload>! {
+        return igGetDragDropPayload()
+    }
+
+    public static var drawData: UnsafeMutablePointer<ImDrawData>! {
         return igGetDrawData()
     }
 
-    public static var drawListSharedData: UnsafeMutablePointer<ImDrawListSharedData> {
+    public static var drawListSharedData: UnsafeMutablePointer<ImDrawListSharedData>! {
         return igGetDrawListSharedData()
     }
 
@@ -1717,15 +1717,15 @@ public enum ImGui {
         igEndTooltip()
     }
 
-    public static func findViewportByID(id: ImGuiID) -> UnsafeMutablePointer<ImGuiViewport> {
+    public static func findViewportByID(_ id: ImGuiID) -> UnsafeMutablePointer<ImGuiViewport>! {
         return igFindViewportByID(id)
     }
 
-    public static func findViewportByPlatformHandle(platformHandle platform_handle: UnsafeMutableRawPointer) -> UnsafeMutablePointer<ImGuiViewport> {
+    public static func findViewportByPlatformHandle(_ platform_handle: UnsafeMutableRawPointer!) -> UnsafeMutablePointer<ImGuiViewport>! {
         return igFindViewportByPlatformHandle(platform_handle)
     }
 
-    public static var font: UnsafeMutablePointer<ImFont> {
+    public static var font: UnsafeMutablePointer<ImFont>! {
         return igGetFont()
     }
 
@@ -1733,13 +1733,13 @@ public enum ImGui {
         return igGetFontSize()
     }
 
-    public static var fontTexUvWhitePixel: SIMD2<Float> {
+    public static var fontTexUVWhitePixel: SIMD2<Float> {
         var pOut = ImVec2()
         igGetFontTexUvWhitePixel(&pOut)
         return (SIMD2<Float>(pOut))
     }
 
-    public static var foregroundDrawList: UnsafeMutablePointer<ImDrawList> {
+    public static var foregroundDrawList: UnsafeMutablePointer<ImDrawList>! {
         return igGetForegroundDrawList_Nil()
     }
 
@@ -1759,11 +1759,11 @@ public enum ImGui {
         igGetAllocatorFunctions(&p_alloc_func, &p_free_func, &p_user_data)
     }
 
-    public static func getBackgroundDrawList(viewport: UnsafeMutablePointer<ImGuiViewport>) -> UnsafeMutablePointer<ImDrawList> {
+    public static func getBackgroundDrawList(viewport: UnsafeMutablePointer<ImGuiViewport>!) -> UnsafeMutablePointer<ImDrawList>! {
         return igGetBackgroundDrawList_ViewportPtr(viewport)
     }
 
-    public static func getColorU32(idx: Color, alphaMul alpha_mul: Float = 1.0) -> UInt32 {
+    public static func getColorU32(index idx: Color, alphaMul alpha_mul: Float = 1.0) -> UInt32 {
         return igGetColorU32_Col(idx.rawValue, alpha_mul)
     }
 
@@ -1783,11 +1783,11 @@ public enum ImGui {
         return igGetColumnWidth(Int32(column_index))
     }
 
-    public static func getForegroundDrawList(viewport: UnsafeMutablePointer<ImGuiViewport>) -> UnsafeMutablePointer<ImDrawList> {
+    public static func getForegroundDrawList(viewport: UnsafeMutablePointer<ImGuiViewport>!) -> UnsafeMutablePointer<ImDrawList>! {
         return igGetForegroundDrawList_ViewportPtr(viewport)
     }
 
-    public static func getID(strId str_id: String) -> ImGuiID {
+    public static func getID(_ str_id: String) -> ImGuiID {
         return igGetID_Str(str_id)
     }
 
@@ -1795,7 +1795,7 @@ public enum ImGui {
         return igGetID_StrStr(str_id_begin, str_id_end)
     }
 
-    public static func getID(ptrId ptr_id: UnsafeRawPointer) -> ImGuiID {
+    public static func getID(_ ptr_id: UnsafeRawPointer!) -> ImGuiID {
         return igGetID_Ptr(ptr_id)
     }
 
@@ -1813,11 +1813,11 @@ public enum ImGui {
         return (SIMD2<Float>(pOut))
     }
 
-    public static func getStyleColorName(idx: Color) -> String {
+    public static func getStyleColorName(index idx: Color) -> String {
         return String(cString: igGetStyleColorName(idx.rawValue))
     }
 
-    public static func getStyleColorVec4(idx: Color) -> UnsafePointer<ImVec4> {
+    public static func getStyleColorVec4(index idx: Color) -> UnsafePointer<ImVec4>! {
         return igGetStyleColorVec4(idx.rawValue)
     }
 
@@ -1835,95 +1835,95 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func inputDouble(label: String, value v: inout Double, step: Double = 0.0, stepFast step_fast: Double = 0.0, format: String = "%.6f", flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value v: inout Double, step: Double = 0.0, stepFast step_fast: Double = 0.0, format: String = "%.6f", flags: InputTextFlags = []) -> Bool {
         return igInputDouble(label, &v, step, step_fast, format, flags.rawValue)
     }
 
     @discardableResult
-    public static func inputFloat(label: String, value v: inout Float, step: Float = 0.0, stepFast step_fast: Float = 0.0, format: String = "%.3f", flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value v: inout Float, step: Float = 0.0, stepFast step_fast: Float = 0.0, format: String = "%.3f", flags: InputTextFlags = []) -> Bool {
         return igInputFloat(label, &v, step, step_fast, format, flags.rawValue)
     }
 
     @discardableResult
-    public static func inputFloat2(label: String, value v: inout SIMD2<Float>, format: String = "%.3f", flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value v: inout SIMD2<Float>, format: String = "%.3f", flags: InputTextFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igInputFloat2(label, v, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func inputFloat3(label: String, value v: inout SIMD3<Float>, format: String = "%.3f", flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value v: inout SIMD3<Float>, format: String = "%.3f", flags: InputTextFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igInputFloat3(label, v, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func inputFloat4(label: String, value v: inout SIMD4<Float>, format: String = "%.3f", flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value v: inout SIMD4<Float>, format: String = "%.3f", flags: InputTextFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igInputFloat4(label, v, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func inputInt(label: String, value vTemp: inout Int, step: Int = 1, stepFast step_fast: Int = 100, flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value vTemp: inout Int, step: Int = 1, stepFast step_fast: Int = 100, flags: InputTextFlags = []) -> Bool {
         var v = Int32(vTemp)
         defer { vTemp = Int(v) }
         return igInputInt(label, &v, Int32(step), Int32(step_fast), flags.rawValue)
     }
 
     @discardableResult
-    public static func inputInt2(label: String, value v: inout SIMD2<Int32>, flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value v: inout SIMD2<Int32>, flags: InputTextFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igInputInt2(label, v, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func inputInt3(label: String, value v: inout SIMD3<Int32>, flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value v: inout SIMD3<Int32>, flags: InputTextFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igInputInt3(label, v, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func inputInt4(label: String, value v: inout SIMD4<Int32>, flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, value v: inout SIMD4<Int32>, flags: InputTextFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igInputInt4(label, v, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func inputScalar(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer, pStep p_step: UnsafeRawPointer? = nil, pStepFast p_step_fast: UnsafeRawPointer? = nil, format: UnsafePointer<CChar>? = nil, flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer!, pStep p_step: UnsafeRawPointer? = nil, pStepFast p_step_fast: UnsafeRawPointer? = nil, format: UnsafePointer<CChar>? = nil, flags: InputTextFlags = []) -> Bool {
         return igInputScalar(label, data_type.rawValue, p_data, p_step, p_step_fast, format, flags.rawValue)
     }
 
     @discardableResult
-    public static func inputScalarN(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer, components: Int, pStep p_step: UnsafeRawPointer? = nil, pStepFast p_step_fast: UnsafeRawPointer? = nil, format: UnsafePointer<CChar>? = nil, flags: InputTextFlags = []) -> Bool {
+    public static func input(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer!, components: Int, pStep p_step: UnsafeRawPointer? = nil, pStepFast p_step_fast: UnsafeRawPointer? = nil, format: UnsafePointer<CChar>? = nil, flags: InputTextFlags = []) -> Bool {
         return igInputScalarN(label, data_type.rawValue, p_data, Int32(components), p_step, p_step_fast, format, flags.rawValue)
     }
 
     @discardableResult
-    public static func inputText(label: String, buffer buf: UnsafeMutablePointer<CChar>, bufferSize buf_size: Int, flags: InputTextFlags = [], callback: ImGuiInputTextCallback? = nil, userData user_data: UnsafeMutableRawPointer? = nil) -> Bool {
+    public static func inputText(label: String, buffer buf: UnsafeMutablePointer<CChar>!, bufferSize buf_size: Int, callback: ImGuiInputTextCallback? = nil, userData user_data: UnsafeMutableRawPointer? = nil, flags: InputTextFlags = []) -> Bool {
         return igInputText(label, buf, buf_size, flags.rawValue, callback, user_data)
     }
 
     @discardableResult
-    public static func inputTextMultiline(label: String, buffer buf: UnsafeMutablePointer<CChar>, bufferSize buf_size: Int, size: SIMD2<Float> = SIMD2<Float>(0, 0), flags: InputTextFlags = [], callback: ImGuiInputTextCallback? = nil, userData user_data: UnsafeMutableRawPointer? = nil) -> Bool {
+    public static func inputTextMultiline(label: String, buffer buf: UnsafeMutablePointer<CChar>!, bufferSize buf_size: Int, size: SIMD2<Float> = SIMD2<Float>(0, 0), callback: ImGuiInputTextCallback? = nil, userData user_data: UnsafeMutableRawPointer? = nil, flags: InputTextFlags = []) -> Bool {
         return igInputTextMultiline(label, buf, buf_size, ImVec2(size), flags.rawValue, callback, user_data)
     }
 
     @discardableResult
-    public static func inputTextWithHint(label: String, hint: String, buffer buf: UnsafeMutablePointer<CChar>, bufferSize buf_size: Int, flags: InputTextFlags = [], callback: ImGuiInputTextCallback? = nil, userData user_data: UnsafeMutableRawPointer? = nil) -> Bool {
+    public static func inputTextWithHint(label: String, hint: String, buffer buf: UnsafeMutablePointer<CChar>!, bufferSize buf_size: Int, callback: ImGuiInputTextCallback? = nil, userData user_data: UnsafeMutableRawPointer? = nil, flags: InputTextFlags = []) -> Bool {
         return igInputTextWithHint(label, hint, buf, buf_size, flags.rawValue, callback, user_data)
     }
 
     @discardableResult
-    public static func invisibleButton(strId str_id: String, size: SIMD2<Float>, flags: ButtonFlags = []) -> Bool {
+    public static func invisibleButton(_ str_id: String, size: SIMD2<Float>, flags: ButtonFlags = []) -> Bool {
         return igInvisibleButton(str_id, ImVec2(size), flags.rawValue)
     }
 
-    public static var io: UnsafeMutablePointer<ImGuiIO> {
+    public static var io: UnsafeMutablePointer<ImGuiIO>! {
         return igGetIO()
     }
 
@@ -2036,7 +2036,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func isPopupOpen(strId str_id: String, flags: PopupFlags = []) -> Bool {
+    public static func isPopupOpen(_ str_id: String, flags: PopupFlags = []) -> Bool {
         return igIsPopupOpen_Str(str_id, flags.rawValue)
     }
 
@@ -2090,21 +2090,21 @@ public enum ImGui {
         return (SIMD2<Float>(pOut))
     }
 
-    public static func labelText(label: String, format fmt: String) -> Void {
+    public static func labelText(label: String, text fmt: String) -> Void {
         withVaList([]) { args in
             igLabelTextV(label, fmt, args)
         }
     }
 
     @discardableResult
-    public static func listBox(label: String, currentItem current_itemTemp: inout Int, items: UnsafePointer<UnsafePointer<CChar>?>, itemsCount items_count: Int, heightInItems height_in_items: Int = -1) -> Bool {
+    public static func listBox(label: String, currentItem current_itemTemp: inout Int, items: UnsafePointer<UnsafePointer<CChar>?>!, itemsCount items_count: Int, heightInItems height_in_items: Int = -1) -> Bool {
         var current_item = Int32(current_itemTemp)
         defer { current_itemTemp = Int(current_item) }
         return igListBox_Str_arr(label, &current_item, items, Int32(items_count), Int32(height_in_items))
     }
 
     @discardableResult
-    public static func listBox(label: String, currentItem current_itemTemp: inout Int, itemsGetter items_getter: @escaping @convention(c) (_ data: UnsafeMutableRawPointer?, _ index: Int32, _ outText: UnsafeMutablePointer<UnsafePointer<CChar>?>?) -> Bool, data: UnsafeMutableRawPointer, itemsCount items_count: Int, heightInItems height_in_items: Int = -1) -> Bool {
+    public static func listBox(label: String, currentItem current_itemTemp: inout Int, itemsGetter items_getter: @escaping @convention(c) (_ data: UnsafeMutableRawPointer?, _ index: Int32, _ outText: UnsafeMutablePointer<UnsafePointer<CChar>?>?) -> Bool, data: UnsafeMutableRawPointer!, itemsCount items_count: Int, heightInItems height_in_items: Int = -1) -> Bool {
         var current_item = Int32(current_itemTemp)
         defer { current_itemTemp = Int(current_item) }
         return igListBox_FnBoolPtr(label, &current_item, items_getter, data, Int32(items_count), Int32(height_in_items))
@@ -2126,7 +2126,7 @@ public enum ImGui {
         igLogFinish()
     }
 
-    public static func logText(format fmt: String) -> Void {
+    public static func logText(_ fmt: String) -> Void {
         withVaList([]) { args in
             igLogTextV(fmt, args)
         }
@@ -2144,15 +2144,15 @@ public enum ImGui {
         igLogToTTY(Int32(auto_open_depth))
     }
 
-    public static var mainViewport: UnsafeMutablePointer<ImGuiViewport> {
+    public static var mainViewport: UnsafeMutablePointer<ImGuiViewport>! {
         return igGetMainViewport()
     }
 
-    public static func memAlloc(size: Int) -> UnsafeMutableRawPointer {
+    public static func memAlloc(size: Int) -> UnsafeMutableRawPointer! {
         return igMemAlloc(size)
     }
 
-    public static func memFree(ptr: UnsafeMutableRawPointer) -> Void {
+    public static func memFree(ptr: UnsafeMutableRawPointer!) -> Void {
         igMemFree(ptr)
     }
 
@@ -2199,7 +2199,7 @@ public enum ImGui {
         igNextColumn()
     }
 
-    public static func openPopup(strId str_id: String, popupFlags popup_flags: PopupFlags = []) -> Void {
+    public static func openPopup(_ str_id: String, popupFlags popup_flags: PopupFlags = []) -> Void {
         igOpenPopup_Str(str_id, popup_flags.rawValue)
     }
 
@@ -2207,27 +2207,27 @@ public enum ImGui {
         igOpenPopup_ID(id, popup_flags.rawValue)
     }
 
-    public static func openPopupOnItemClick(strId str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Void {
+    public static func openPopupOnItemClick(_ str_id: UnsafePointer<CChar>? = nil, popupFlags popup_flags: PopupFlags = PopupFlags(rawValue: 1)) -> Void {
         igOpenPopupOnItemClick(str_id, popup_flags.rawValue)
     }
 
-    public static var platformIO: UnsafeMutablePointer<ImGuiPlatformIO> {
+    public static var platformIO: UnsafeMutablePointer<ImGuiPlatformIO>! {
         return igGetPlatformIO()
     }
 
-    public static func plotHistogram(label: String, values: UnsafePointer<Float>, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0), stride: Int = MemoryLayout<Float>.stride) -> Void {
+    public static func plotHistogram(label: String, values: UnsafePointer<Float>!, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0), stride: Int = MemoryLayout<Float>.stride) -> Void {
         igPlotHistogram_FloatPtr(label, values, Int32(values_count), Int32(values_offset), overlay_text, scale_min, scale_max, ImVec2(graph_size), Int32(stride))
     }
 
-    public static func plotHistogram(label: String, valuesGetter values_getter: @escaping @convention(c) (_ data: UnsafeMutableRawPointer?, _ index: Int32) -> Float, data: UnsafeMutableRawPointer, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Void {
+    public static func plotHistogram(label: String, valuesGetter values_getter: @escaping @convention(c) (_ data: UnsafeMutableRawPointer?, _ index: Int32) -> Float, data: UnsafeMutableRawPointer!, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Void {
         igPlotHistogram_FnFloatPtr(label, values_getter, data, Int32(values_count), Int32(values_offset), overlay_text, scale_min, scale_max, ImVec2(graph_size))
     }
 
-    public static func plotLines(label: String, values: UnsafePointer<Float>, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0), stride: Int = MemoryLayout<Float>.stride) -> Void {
+    public static func plotLines(label: String, values: UnsafePointer<Float>!, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0), stride: Int = MemoryLayout<Float>.stride) -> Void {
         igPlotLines_FloatPtr(label, values, Int32(values_count), Int32(values_offset), overlay_text, scale_min, scale_max, ImVec2(graph_size), Int32(stride))
     }
 
-    public static func plotLines(label: String, valuesGetter values_getter: @escaping @convention(c) (_ data: UnsafeMutableRawPointer?, _ index: Int32) -> Float, data: UnsafeMutableRawPointer, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Void {
+    public static func plotLines(label: String, valuesGetter values_getter: @escaping @convention(c) (_ data: UnsafeMutableRawPointer?, _ index: Int32) -> Float, data: UnsafeMutableRawPointer!, valuesCount values_count: Int, valuesOffset values_offset: Int = 0, overlayText overlay_text: UnsafePointer<CChar>? = nil, scaleMin scale_min: Float = .greatestFiniteMagnitude, scaleMax scale_max: Float = .greatestFiniteMagnitude, graphSize graph_size: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Void {
         igPlotLines_FnFloatPtr(label, values_getter, data, Int32(values_count), Int32(values_offset), overlay_text, scale_min, scale_max, ImVec2(graph_size))
     }
 
@@ -2271,7 +2271,7 @@ public enum ImGui {
         igProgressBar(fraction, ImVec2(size_arg), overlay)
     }
 
-    public static func pushAllowKeyboardFocus(allowKeyboardFocus allow_keyboard_focus: Bool) -> Void {
+    public static func pushAllowKeyboardFocus(_ allow_keyboard_focus: Bool) -> Void {
         igPushAllowKeyboardFocus(allow_keyboard_focus)
     }
 
@@ -2283,11 +2283,11 @@ public enum ImGui {
         igPushClipRect(ImVec2(clip_rect_min), ImVec2(clip_rect_max), intersect_with_current_clip_rect)
     }
 
-    public static func pushFont(font: UnsafeMutablePointer<ImFont>) -> Void {
+    public static func pushFont(_ font: UnsafeMutablePointer<ImFont>!) -> Void {
         igPushFont(font)
     }
 
-    public static func pushID(strId str_id: String) -> Void {
+    public static func pushID(_ str_id: String) -> Void {
         igPushID_Str(str_id)
     }
 
@@ -2295,31 +2295,31 @@ public enum ImGui {
         igPushID_StrStr(str_id_begin, str_id_end)
     }
 
-    public static func pushID(ptrId ptr_id: UnsafeRawPointer) -> Void {
+    public static func pushID(_ ptr_id: UnsafeRawPointer!) -> Void {
         igPushID_Ptr(ptr_id)
     }
 
-    public static func pushID(intId int_id: Int) -> Void {
+    public static func pushID(_ int_id: Int) -> Void {
         igPushID_Int(Int32(int_id))
     }
 
-    public static func pushItemWidth(itemWidth item_width: Float) -> Void {
+    public static func pushItemWidth(_ item_width: Float) -> Void {
         igPushItemWidth(item_width)
     }
 
-    public static func pushStyleColor(idx: Color, color col: UInt32) -> Void {
+    public static func pushStyleColor(index idx: Color, color col: UInt32) -> Void {
         igPushStyleColor_U32(idx.rawValue, col)
     }
 
-    public static func pushStyleColor(idx: Color, color col: SIMD4<Float>) -> Void {
+    public static func pushStyleColor(index idx: Color, color col: SIMD4<Float>) -> Void {
         igPushStyleColor_Vec4(idx.rawValue, ImVec4(col))
     }
 
-    public static func pushStyleVar(idx: StyleVar, val: Float) -> Void {
+    public static func pushStyleVar(index idx: StyleVar, val: Float) -> Void {
         igPushStyleVar_Float(idx.rawValue, val)
     }
 
-    public static func pushStyleVar(idx: StyleVar, val: SIMD2<Float>) -> Void {
+    public static func pushStyleVar(index idx: StyleVar, val: SIMD2<Float>) -> Void {
         igPushStyleVar_Vec2(idx.rawValue, ImVec2(val))
     }
 
@@ -2390,12 +2390,12 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func selectable(label: String, selected: Bool = false, flags: SelectableFlags = [], size: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Bool {
+    public static func selectable(label: String, selected: Bool = false, size: SIMD2<Float> = SIMD2<Float>(0, 0), flags: SelectableFlags = []) -> Bool {
         return igSelectable_Bool(label, selected, flags.rawValue, ImVec2(size))
     }
 
     @discardableResult
-    public static func selectable(label: String, pSelected p_selected: inout Bool, flags: SelectableFlags = [], size: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Bool {
+    public static func selectable(label: String, pSelected p_selected: inout Bool, size: SIMD2<Float> = SIMD2<Float>(0, 0), flags: SelectableFlags = []) -> Bool {
         return igSelectable_BoolPtr(label, &p_selected, flags.rawValue, ImVec2(size))
     }
 
@@ -2420,7 +2420,7 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func setDragDropPayload(type: String, data: UnsafeRawPointer, sz: Int, cond: Condition = []) -> Bool {
+    public static func setDragDropPayload(type: String, data: UnsafeRawPointer!, sz: Int, cond: Condition = []) -> Bool {
         return igSetDragDropPayload(type, data, sz, cond.rawValue)
     }
 
@@ -2440,27 +2440,27 @@ public enum ImGui {
         igSetNextItemOpen(is_open, cond.rawValue)
     }
 
-    public static func setNextItemWidth(itemWidth item_width: Float) -> Void {
+    public static func setNextItemWidth(_ item_width: Float) -> Void {
         igSetNextItemWidth(item_width)
     }
 
-    public static func setNextWindowBgAlpha(alpha: Float) -> Void {
+    public static func setNextWindowBgAlpha(_ alpha: Float) -> Void {
         igSetNextWindowBgAlpha(alpha)
     }
 
-    public static func setNextWindowClass(windowClass window_class: UnsafePointer<ImGuiWindowClass>) -> Void {
+    public static func setNextWindowClass(_ window_class: UnsafePointer<ImGuiWindowClass>!) -> Void {
         igSetNextWindowClass(window_class)
     }
 
-    public static func setNextWindowCollapsed(collapsed: Bool, cond: Condition = []) -> Void {
+    public static func setNextWindowCollapsed(_ collapsed: Bool, cond: Condition = []) -> Void {
         igSetNextWindowCollapsed(collapsed, cond.rawValue)
     }
 
-    public static func setNextWindowContentSize(size: SIMD2<Float>) -> Void {
+    public static func setNextWindowContentSize(_ size: SIMD2<Float>) -> Void {
         igSetNextWindowContentSize(ImVec2(size))
     }
 
-    public static func setNextWindowDockID(dockId dock_id: ImGuiID, cond: Condition = []) -> Void {
+    public static func setNextWindowDockID(_ dock_id: ImGuiID, cond: Condition = []) -> Void {
         igSetNextWindowDockID(dock_id, cond.rawValue)
     }
 
@@ -2472,7 +2472,7 @@ public enum ImGui {
         igSetNextWindowPos(ImVec2(pos), cond.rawValue, ImVec2(pivot))
     }
 
-    public static func setNextWindowSize(size: SIMD2<Float>, cond: Condition = []) -> Void {
+    public static func setNextWindowSize(_ size: SIMD2<Float>, cond: Condition = []) -> Void {
         igSetNextWindowSize(ImVec2(size), cond.rawValue)
     }
 
@@ -2504,13 +2504,13 @@ public enum ImGui {
         igSetTabItemClosed(tab_or_docked_window_label)
     }
 
-    public static func setTooltip(format fmt: String) -> Void {
+    public static func setTooltip(_ fmt: String) -> Void {
         withVaList([]) { args in
             igSetTooltipV(fmt, args)
         }
     }
 
-    public static func setWindowCollapsed(collapsed: Bool, cond: Condition = []) -> Void {
+    public static func setWindowCollapsed(_ collapsed: Bool, cond: Condition = []) -> Void {
         igSetWindowCollapsed_Bool(collapsed, cond.rawValue)
     }
 
@@ -2526,7 +2526,7 @@ public enum ImGui {
         igSetWindowFocus_Str(name)
     }
 
-    public static func setWindowFontScale(scale: Float) -> Void {
+    public static func setWindowFontScale(_ scale: Float) -> Void {
         igSetWindowFontScale(scale)
     }
 
@@ -2538,7 +2538,7 @@ public enum ImGui {
         igSetWindowPos_Str(name, ImVec2(pos), cond.rawValue)
     }
 
-    public static func setWindowSize(size: SIMD2<Float>, cond: Condition = []) -> Void {
+    public static func setWindowSize(_ size: SIMD2<Float>, cond: Condition = []) -> Void {
         igSetWindowSize_Vec2(ImVec2(size), cond.rawValue)
     }
 
@@ -2576,72 +2576,89 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func sliderAngle(label: String, rad v_rad: inout Float, degreesMin v_degrees_min: Float = -360.0, degreesMax v_degrees_max: Float = +360.0, format: String = "%.0f deg", flags: SliderFlags = []) -> Bool {
-        return igSliderAngle(label, &v_rad, v_degrees_min, v_degrees_max, format, flags.rawValue)
-    }
-
-    @discardableResult
-    public static func sliderFloat(label: String, value v: inout Float, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, value v: inout Float, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return igSliderFloat(label, &v, v_min, v_max, format, flags.rawValue)
     }
 
     @discardableResult
-    public static func sliderFloat2(label: String, value v: inout SIMD2<Float>, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, value v: inout SIMD2<Float>, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igSliderFloat2(label, v, v_min, v_max, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func sliderFloat3(label: String, value v: inout SIMD3<Float>, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, value v: inout SIMD3<Float>, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igSliderFloat3(label, v, v_min, v_max, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func sliderFloat4(label: String, value v: inout SIMD4<Float>, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, value v: inout SIMD4<Float>, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igSliderFloat4(label, v, v_min, v_max, format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func sliderInt(label: String, value vTemp: inout Int, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, value vTemp: inout Int, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
         var v = Int32(vTemp)
         defer { vTemp = Int(v) }
         return igSliderInt(label, &v, Int32(v_min), Int32(v_max), format, flags.rawValue)
     }
 
     @discardableResult
-    public static func sliderInt2(label: String, value v: inout SIMD2<Int32>, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, value v: inout SIMD2<Int32>, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igSliderInt2(label, v, Int32(v_min), Int32(v_max), format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func sliderInt3(label: String, value v: inout SIMD3<Int32>, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, value v: inout SIMD3<Int32>, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igSliderInt3(label, v, Int32(v_min), Int32(v_max), format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func sliderInt4(label: String, value v: inout SIMD4<Int32>, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, value v: inout SIMD4<Int32>, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
         return v.withMutableMemberPointer { v in
             return igSliderInt4(label, v, Int32(v_min), Int32(v_max), format, flags.rawValue)
         }
     }
 
     @discardableResult
-    public static func sliderScalar(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer, pMin p_min: UnsafeRawPointer, pMax p_max: UnsafeRawPointer, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer!, pMin p_min: UnsafeRawPointer!, pMax p_max: UnsafeRawPointer!, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
         return igSliderScalar(label, data_type.rawValue, p_data, p_min, p_max, format, flags.rawValue)
     }
 
     @discardableResult
-    public static func sliderScalarN(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer, components: Int, pMin p_min: UnsafeRawPointer, pMax p_max: UnsafeRawPointer, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
+    public static func slider(label: String, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer!, components: Int, pMin p_min: UnsafeRawPointer!, pMax p_max: UnsafeRawPointer!, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
         return igSliderScalarN(label, data_type.rawValue, p_data, Int32(components), p_min, p_max, format, flags.rawValue)
+    }
+
+    @discardableResult
+    public static func slider(label: String, size: SIMD2<Float>, value v: inout Float, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
+        return igVSliderFloat(label, ImVec2(size), &v, v_min, v_max, format, flags.rawValue)
+    }
+
+    @discardableResult
+    public static func slider(label: String, size: SIMD2<Float>, value vTemp: inout Int, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
+        var v = Int32(vTemp)
+        defer { vTemp = Int(v) }
+        return igVSliderInt(label, ImVec2(size), &v, Int32(v_min), Int32(v_max), format, flags.rawValue)
+    }
+
+    @discardableResult
+    public static func slider(label: String, size: SIMD2<Float>, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer!, pMin p_min: UnsafeRawPointer!, pMax p_max: UnsafeRawPointer!, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
+        return igVSliderScalar(label, ImVec2(size), data_type.rawValue, p_data, p_min, p_max, format, flags.rawValue)
+    }
+
+    @discardableResult
+    public static func sliderAngle(label: String, rad v_rad: inout Float, degreesMin v_degrees_min: Float = -360.0, degreesMax v_degrees_max: Float = +360.0, format: String = "%.0f deg", flags: SliderFlags = []) -> Bool {
+        return igSliderAngle(label, &v_rad, v_degrees_min, v_degrees_max, format, flags.rawValue)
     }
 
     @discardableResult
@@ -2653,7 +2670,7 @@ public enum ImGui {
         igSpacing()
     }
 
-    public static var stateStorage: UnsafeMutablePointer<ImGuiStorage> {
+    public static var stateStorage: UnsafeMutablePointer<ImGuiStorage>! {
         get {
             return igGetStateStorage()
         }
@@ -2662,7 +2679,7 @@ public enum ImGui {
         }
     }
 
-    public static var style: UnsafeMutablePointer<ImGuiStyle> {
+    public static var style: UnsafeMutablePointer<ImGuiStyle>! {
         return igGetStyle()
     }
 
@@ -2703,7 +2720,7 @@ public enum ImGui {
         return igTableGetRowIndex()
     }
 
-    public static func tableGetSortSpecs() -> UnsafeMutablePointer<ImGuiTableSortSpecs> {
+    public static func tableGetSortSpecs() -> UnsafeMutablePointer<ImGuiTableSortSpecs>! {
         return igTableGetSortSpecs()
     }
 
@@ -2723,7 +2740,7 @@ public enum ImGui {
         igTableNextRow(row_flags.rawValue, min_row_height)
     }
 
-    public static func tableSetBgColor(target: TableBgTarget, color: UInt32, columnN column_n: Int = -1) -> Void {
+    public static func tableSetBackgroundColor(target: TableBgTarget, color: UInt32, columnN column_n: Int = -1) -> Void {
         igTableSetBgColor(target.rawValue, color, Int32(column_n))
     }
 
@@ -2736,7 +2753,7 @@ public enum ImGui {
         return igTableSetColumnIndex(Int32(column_n))
     }
 
-    public static func tableSetupColumn(label: String, flags: TableColumnFlags = [], initWidthOrWeight init_width_or_weight: Float = 0.0, userId user_id: ImGuiID = 0) -> Void {
+    public static func tableSetupColumn(label: String, initWidthOrWeight init_width_or_weight: Float = 0.0, userId user_id: ImGuiID = 0, flags: TableColumnFlags = []) -> Void {
         igTableSetupColumn(label, flags.rawValue, init_width_or_weight, user_id)
     }
 
@@ -2744,19 +2761,19 @@ public enum ImGui {
         igTableSetupScrollFreeze(Int32(cols), Int32(rows))
     }
 
-    public static func text(format fmt: String) -> Void {
+    public static func text(_ fmt: String) -> Void {
         withVaList([]) { args in
             igTextV(fmt, args)
         }
     }
 
-    public static func textColored(color col: SIMD4<Float>, format fmt: String) -> Void {
+    public static func textColored(color col: SIMD4<Float>, text fmt: String) -> Void {
         withVaList([]) { args in
             igTextColoredV(ImVec4(col), fmt, args)
         }
     }
 
-    public static func textDisabled(format fmt: String) -> Void {
+    public static func textDisabled(_ fmt: String) -> Void {
         withVaList([]) { args in
             igTextDisabledV(fmt, args)
         }
@@ -2774,7 +2791,7 @@ public enum ImGui {
         igTextUnformatted(text, text_end)
     }
 
-    public static func textWrapped(format fmt: String) -> Void {
+    public static func textWrapped(_ fmt: String) -> Void {
         withVaList([]) { args in
             igTextWrappedV(fmt, args)
         }
@@ -2795,30 +2812,30 @@ public enum ImGui {
     }
 
     @discardableResult
-    public static func treeNode(strId str_id: String, format fmt: String) -> Bool {
-        return withVaList([]) { args in
-            return igTreeNodeV_Str(str_id, fmt, args)
-        }
-    }
-
-    @discardableResult
-    public static func treeNode(ptrId ptr_id: UnsafeRawPointer, format fmt: String) -> Bool {
-        return withVaList([]) { args in
-            return igTreeNodeV_Ptr(ptr_id, fmt, args)
-        }
-    }
-
-    @discardableResult
-    public static func treeNodeEx(strId str_id: String, flags: TreeNodeFlags, format fmt: String) -> Bool {
+    public static func treeNode(_ str_id: String, text fmt: String, flags: TreeNodeFlags) -> Bool {
         return withVaList([]) { args in
             return igTreeNodeExV_Str(str_id, flags.rawValue, fmt, args)
         }
     }
 
     @discardableResult
-    public static func treeNodeEx(ptrId ptr_id: UnsafeRawPointer, flags: TreeNodeFlags, format fmt: String) -> Bool {
+    public static func treeNode(_ ptr_id: UnsafeRawPointer!, text fmt: String, flags: TreeNodeFlags) -> Bool {
         return withVaList([]) { args in
             return igTreeNodeExV_Ptr(ptr_id, flags.rawValue, fmt, args)
+        }
+    }
+
+    @discardableResult
+    public static func treeNode(_ str_id: String, text fmt: String) -> Bool {
+        return withVaList([]) { args in
+            return igTreeNodeV_Str(str_id, fmt, args)
+        }
+    }
+
+    @discardableResult
+    public static func treeNode(_ ptr_id: UnsafeRawPointer!, text fmt: String) -> Bool {
+        return withVaList([]) { args in
+            return igTreeNodeV_Ptr(ptr_id, fmt, args)
         }
     }
 
@@ -2830,11 +2847,11 @@ public enum ImGui {
         igTreePop()
     }
 
-    public static func treePush(strId str_id: String) -> Void {
+    public static func treePush(_ str_id: String) -> Void {
         igTreePush_Str(str_id)
     }
 
-    public static func treePush(ptrId ptr_id: UnsafeRawPointer? = nil) -> Void {
+    public static func treePush(_ ptr_id: UnsafeRawPointer? = nil) -> Void {
         igTreePush_Ptr(ptr_id)
     }
 
@@ -2844,23 +2861,6 @@ public enum ImGui {
 
     public static func updatePlatformWindows() -> Void {
         igUpdatePlatformWindows()
-    }
-
-    @discardableResult
-    public static func vSliderFloat(label: String, size: SIMD2<Float>, value v: inout Float, min v_min: Float, max v_max: Float, format: String = "%.3f", flags: SliderFlags = []) -> Bool {
-        return igVSliderFloat(label, ImVec2(size), &v, v_min, v_max, format, flags.rawValue)
-    }
-
-    @discardableResult
-    public static func vSliderInt(label: String, size: SIMD2<Float>, value vTemp: inout Int, min v_min: Int, max v_max: Int, format: String = "%d", flags: SliderFlags = []) -> Bool {
-        var v = Int32(vTemp)
-        defer { vTemp = Int(v) }
-        return igVSliderInt(label, ImVec2(size), &v, Int32(v_min), Int32(v_max), format, flags.rawValue)
-    }
-
-    @discardableResult
-    public static func vSliderScalar(label: String, size: SIMD2<Float>, dataType data_type: DataType, pData p_data: UnsafeMutableRawPointer, pMin p_min: UnsafeRawPointer, pMax p_max: UnsafeRawPointer, format: UnsafePointer<CChar>? = nil, flags: SliderFlags = []) -> Bool {
-        return igVSliderScalar(label, ImVec2(size), data_type.rawValue, p_data, p_min, p_max, format, flags.rawValue)
     }
 
     public static func value(prefix: String, b: Bool) -> Void {
@@ -2895,15 +2895,15 @@ public enum ImGui {
         return (SIMD2<Float>(pOut))
     }
 
+    public static var windowDPIScale: Float {
+        return igGetWindowDpiScale()
+    }
+
     public static var windowDockID: ImGuiID {
         return igGetWindowDockID()
     }
 
-    public static var windowDpiScale: Float {
-        return igGetWindowDpiScale()
-    }
-
-    public static var windowDrawList: UnsafeMutablePointer<ImDrawList> {
+    public static var windowDrawList: UnsafeMutablePointer<ImDrawList>! {
         return igGetWindowDrawList()
     }
 
@@ -2923,7 +2923,7 @@ public enum ImGui {
         return (SIMD2<Float>(pOut))
     }
 
-    public static var windowViewport: UnsafeMutablePointer<ImGuiViewport> {
+    public static var windowViewport: UnsafeMutablePointer<ImGuiViewport>! {
         return igGetWindowViewport()
     }
 
@@ -2979,7 +2979,7 @@ extension ImDrawList {
         ImDrawList_AddBezierQuadratic(&self, ImVec2(p1), ImVec2(p2), ImVec2(p3), col, thickness, Int32(num_segments))
     }
 
-    public mutating func addCallback(callback: @escaping ImDrawCallback, callbackData callback_data: UnsafeMutableRawPointer) -> Void {
+    public mutating func addCallback(_ callback: @escaping ImDrawCallback, callbackData callback_data: UnsafeMutableRawPointer!) -> Void {
         ImDrawList_AddCallback(&self, callback, callback_data)
     }
 
@@ -2991,11 +2991,11 @@ extension ImDrawList {
         ImDrawList_AddCircleFilled(&self, ImVec2(center), radius, col, Int32(num_segments))
     }
 
-    public mutating func addConvexPolyFilled(points: UnsafePointer<ImVec2>, numPoints num_points: Int, color col: UInt32) -> Void {
+    public mutating func addConvexPolyFilled(points: UnsafePointer<ImVec2>!, numPoints num_points: Int, color col: UInt32) -> Void {
         ImDrawList_AddConvexPolyFilled(&self, points, Int32(num_points), col)
     }
 
-    public mutating func addDrawCmd() -> Void {
+    public mutating func addDrawCommand() -> Void {
         ImDrawList_AddDrawCmd(&self)
     }
 
@@ -3023,7 +3023,7 @@ extension ImDrawList {
         ImDrawList_AddNgonFilled(&self, ImVec2(center), radius, col, Int32(num_segments))
     }
 
-    public mutating func addPolyline(points: UnsafePointer<ImVec2>, numPoints num_points: Int, color col: UInt32, flags: ImGui.DrawFlags, thickness: Float) -> Void {
+    public mutating func addPolyline(points: UnsafePointer<ImVec2>!, numPoints num_points: Int, color col: UInt32, thickness: Float, flags: ImGui.DrawFlags) -> Void {
         ImDrawList_AddPolyline(&self, points, Int32(num_points), col, flags.rawValue, thickness)
     }
 
@@ -3035,7 +3035,7 @@ extension ImDrawList {
         ImDrawList_AddQuadFilled(&self, ImVec2(p1), ImVec2(p2), ImVec2(p3), ImVec2(p4), col)
     }
 
-    public mutating func addRect(pMin p_min: SIMD2<Float>, pMax p_max: SIMD2<Float>, color col: UInt32, rounding: Float = 0.0, flags: ImGui.DrawFlags = [], thickness: Float = 1.0) -> Void {
+    public mutating func addRect(pMin p_min: SIMD2<Float>, pMax p_max: SIMD2<Float>, color col: UInt32, rounding: Float = 0.0, thickness: Float = 1.0, flags: ImGui.DrawFlags = []) -> Void {
         ImDrawList_AddRect(&self, ImVec2(p_min), ImVec2(p_max), col, rounding, flags.rawValue, thickness)
     }
 
@@ -3051,7 +3051,7 @@ extension ImDrawList {
         ImDrawList_AddText_Vec2(&self, ImVec2(pos), col, text_begin, text_end)
     }
 
-    public mutating func addText(font: UnsafePointer<ImFont>, fontSize font_size: Float, position pos: SIMD2<Float>, color col: UInt32, textBegin text_begin: String, textEnd text_end: UnsafePointer<CChar>? = nil, wrapWidth wrap_width: Float = 0.0, cpuFineClipRect cpu_fine_clip_rect: UnsafePointer<ImVec4>? = nil) -> Void {
+    public mutating func addText(font: UnsafePointer<ImFont>!, fontSize font_size: Float, position pos: SIMD2<Float>, color col: UInt32, textBegin text_begin: String, textEnd text_end: UnsafePointer<CChar>? = nil, wrapWidth wrap_width: Float = 0.0, cpuFineClipRect cpu_fine_clip_rect: UnsafePointer<ImVec4>? = nil) -> Void {
         ImDrawList_AddText_FontPtr(&self, font, font_size, ImVec2(pos), col, text_begin, text_end, wrap_width, cpu_fine_clip_rect)
     }
 
@@ -3099,7 +3099,7 @@ extension ImDrawList {
         }
     }
 
-    public mutating func cloneOutput() -> UnsafeMutablePointer<ImDrawList> {
+    public mutating func cloneOutput() -> UnsafeMutablePointer<ImDrawList>! {
         return ImDrawList_CloneOutput(&self)
     }
 
@@ -3159,7 +3159,7 @@ extension ImDrawList {
         ImDrawList_PathRect(&self, ImVec2(rect_min), ImVec2(rect_max), rounding, flags.rawValue)
     }
 
-    public mutating func pathStroke(color col: UInt32, flags: ImGui.DrawFlags = [], thickness: Float = 1.0) -> Void {
+    public mutating func pathStroke(color col: UInt32, thickness: Float = 1.0, flags: ImGui.DrawFlags = []) -> Void {
         ImDrawList_PathStroke(&self, col, flags.rawValue, thickness)
     }
 
@@ -3187,11 +3187,11 @@ extension ImDrawList {
         ImDrawList_PrimRectUV(&self, ImVec2(a), ImVec2(b), ImVec2(uv_a), ImVec2(uv_b), col)
     }
 
-    public mutating func primReserve(idxCount idx_count: Int, vtxCount vtx_count: Int) -> Void {
+    public mutating func primReserve(indexCount idx_count: Int, vtxCount vtx_count: Int) -> Void {
         ImDrawList_PrimReserve(&self, Int32(idx_count), Int32(vtx_count))
     }
 
-    public mutating func primUnreserve(idxCount idx_count: Int, vtxCount vtx_count: Int) -> Void {
+    public mutating func primUnreserve(indexCount idx_count: Int, vtxCount vtx_count: Int) -> Void {
         ImDrawList_PrimUnreserve(&self, Int32(idx_count), Int32(vtx_count))
     }
 
@@ -3199,7 +3199,7 @@ extension ImDrawList {
         ImDrawList_PrimVtx(&self, ImVec2(pos), ImVec2(uv), col)
     }
 
-    public mutating func primWriteIdx(idx: ImDrawIdx) -> Void {
+    public mutating func primWriteIdx(index idx: ImDrawIdx) -> Void {
         ImDrawList_PrimWriteIdx(&self, idx)
     }
 
@@ -3215,7 +3215,7 @@ extension ImDrawList {
         ImDrawList_PushClipRectFullScreen(&self)
     }
 
-    public mutating func pushTextureID(textureId texture_id: ImTextureID) -> Void {
+    public mutating func pushTextureID(_ texture_id: ImTextureID) -> Void {
         ImDrawList_PushTextureID(&self, texture_id)
     }
 
@@ -3238,22 +3238,22 @@ extension ImDrawListSplitter {
         ImDrawListSplitter_ClearFreeMemory(&self)
     }
 
-    public mutating func merge(drawList draw_list: UnsafeMutablePointer<ImDrawList>) -> Void {
+    public mutating func merge(drawList draw_list: UnsafeMutablePointer<ImDrawList>!) -> Void {
         ImDrawListSplitter_Merge(&self, draw_list)
     }
 
-    public mutating func setCurrentChannel(drawList draw_list: UnsafeMutablePointer<ImDrawList>, channelIdx channel_idx: Int) -> Void {
+    public mutating func setCurrentChannel(drawList draw_list: UnsafeMutablePointer<ImDrawList>!, channelIndex channel_idx: Int) -> Void {
         ImDrawListSplitter_SetCurrentChannel(&self, draw_list, Int32(channel_idx))
     }
 
-    public mutating func split(drawList draw_list: UnsafeMutablePointer<ImDrawList>, count: Int) -> Void {
+    public mutating func split(drawList draw_list: UnsafeMutablePointer<ImDrawList>!, count: Int) -> Void {
         ImDrawListSplitter_Split(&self, draw_list, Int32(count))
     }
 
 }
 
 extension ImFont {
-    public mutating func addGlyph(srcCfg src_cfg: UnsafePointer<ImFontConfig>, c: ImWchar, x0: Float, y0: Float, x1: Float, y1: Float, u0: Float, v0: Float, u1: Float, v1: Float, advanceX advance_x: Float) -> Void {
+    public mutating func addGlyph(srcCfg src_cfg: UnsafePointer<ImFontConfig>!, c: ImWchar, x0: Float, y0: Float, x1: Float, y1: Float, u0: Float, v0: Float, u1: Float, v1: Float, advanceX advance_x: Float) -> Void {
         ImFont_AddGlyph(&self, src_cfg, c, x0, y0, x1, y1, u0, v0, u1, v1, advance_x)
     }
 
@@ -3285,11 +3285,11 @@ extension ImFont {
         }
     }
 
-    public mutating func findGlyph(c: ImWchar) -> UnsafePointer<ImFontGlyph> {
+    public mutating func findGlyph(c: ImWchar) -> UnsafePointer<ImFontGlyph>! {
         return ImFont_FindGlyph(&self, c)
     }
 
-    public mutating func findGlyphNoFallback(c: ImWchar) -> UnsafePointer<ImFontGlyph> {
+    public mutating func findGlyphNoFallback(c: ImWchar) -> UnsafePointer<ImFontGlyph>! {
         return ImFont_FindGlyphNoFallback(&self, c)
     }
 
@@ -3310,11 +3310,11 @@ extension ImFont {
         return ImFont_IsLoaded(&self)
     }
 
-    public mutating func renderChar(drawList draw_list: UnsafeMutablePointer<ImDrawList>, size: Float, position pos: SIMD2<Float>, color col: UInt32, c: ImWchar) -> Void {
+    public mutating func renderChar(drawList draw_list: UnsafeMutablePointer<ImDrawList>!, size: Float, position pos: SIMD2<Float>, color col: UInt32, c: ImWchar) -> Void {
         ImFont_RenderChar(&self, draw_list, size, ImVec2(pos), col, c)
     }
 
-    public mutating func renderText(drawList draw_list: UnsafeMutablePointer<ImDrawList>, size: Float, position pos: SIMD2<Float>, color col: UInt32, clipRect clip_rect: SIMD4<Float>, textBegin text_begin: String, textEnd text_end: String, wrapWidth wrap_width: Float = 0.0, cpuFineClip cpu_fine_clip: Bool = false) -> Void {
+    public mutating func renderText(drawList draw_list: UnsafeMutablePointer<ImDrawList>!, size: Float, position pos: SIMD2<Float>, color col: UInt32, clipRect clip_rect: SIMD4<Float>, textBegin text_begin: String, textEnd text_end: String, wrapWidth wrap_width: Float = 0.0, cpuFineClip cpu_fine_clip: Bool = false) -> Void {
         ImFont_RenderText(&self, draw_list, size, ImVec2(pos), col, ImVec4(clip_rect), text_begin, text_end, wrap_width, cpu_fine_clip)
     }
 
@@ -3325,7 +3325,7 @@ extension ImFont {
 }
 
 extension ImFontAtlas {
-    public mutating func addCustomRectFontGlyph(font: UnsafeMutablePointer<ImFont>, id: ImWchar, width: Int, height: Int, advanceX advance_x: Float, offset: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Int32 {
+    public mutating func addCustomRectFontGlyph(font: UnsafeMutablePointer<ImFont>!, id: ImWchar, width: Int, height: Int, advanceX advance_x: Float, offset: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Int32 {
         return ImFontAtlas_AddCustomRectFontGlyph(&self, font, id, Int32(width), Int32(height), advance_x, ImVec2(offset))
     }
 
@@ -3333,27 +3333,27 @@ extension ImFontAtlas {
         return ImFontAtlas_AddCustomRectRegular(&self, Int32(width), Int32(height))
     }
 
-    public mutating func addFont(fontCfg font_cfg: UnsafePointer<ImFontConfig>) -> UnsafeMutablePointer<ImFont> {
+    public mutating func addFont(fontCfg font_cfg: UnsafePointer<ImFontConfig>!) -> UnsafeMutablePointer<ImFont>! {
         return ImFontAtlas_AddFont(&self, font_cfg)
     }
 
-    public mutating func addFontDefault(fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil) -> UnsafeMutablePointer<ImFont> {
+    public mutating func addFontDefault(fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil) -> UnsafeMutablePointer<ImFont>! {
         return ImFontAtlas_AddFontDefault(&self, font_cfg)
     }
 
-    public mutating func addFontFromFileTTF(filename: String, sizePixels size_pixels: Float, fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil, glyphRanges glyph_ranges: UnsafePointer<ImWchar>? = nil) -> UnsafeMutablePointer<ImFont> {
+    public mutating func addFontFromFileTTF(filename: String, sizePixels size_pixels: Float, fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil, glyphRanges glyph_ranges: UnsafePointer<ImWchar>? = nil) -> UnsafeMutablePointer<ImFont>! {
         return ImFontAtlas_AddFontFromFileTTF(&self, filename, size_pixels, font_cfg, glyph_ranges)
     }
 
-    public mutating func addFontFromMemoryCompressedBase85TTF(compressedFontDataBase85 compressed_font_data_base85: String, sizePixels size_pixels: Float, fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil, glyphRanges glyph_ranges: UnsafePointer<ImWchar>? = nil) -> UnsafeMutablePointer<ImFont> {
+    public mutating func addFontFromMemoryCompressedBase85TTF(compressedFontDataBase85 compressed_font_data_base85: String, sizePixels size_pixels: Float, fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil, glyphRanges glyph_ranges: UnsafePointer<ImWchar>? = nil) -> UnsafeMutablePointer<ImFont>! {
         return ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(&self, compressed_font_data_base85, size_pixels, font_cfg, glyph_ranges)
     }
 
-    public mutating func addFontFromMemoryCompressedTTF(compressedFontData compressed_font_data: UnsafeRawPointer, compressedFontSize compressed_font_size: Int, sizePixels size_pixels: Float, fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil, glyphRanges glyph_ranges: UnsafePointer<ImWchar>? = nil) -> UnsafeMutablePointer<ImFont> {
+    public mutating func addFontFromMemoryCompressedTTF(compressedFontData compressed_font_data: UnsafeRawPointer!, compressedFontSize compressed_font_size: Int, sizePixels size_pixels: Float, fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil, glyphRanges glyph_ranges: UnsafePointer<ImWchar>? = nil) -> UnsafeMutablePointer<ImFont>! {
         return ImFontAtlas_AddFontFromMemoryCompressedTTF(&self, compressed_font_data, Int32(compressed_font_size), size_pixels, font_cfg, glyph_ranges)
     }
 
-    public mutating func addFontFromMemoryTTF(fontData font_data: UnsafeMutableRawPointer, fontSize font_size: Int, sizePixels size_pixels: Float, fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil, glyphRanges glyph_ranges: UnsafePointer<ImWchar>? = nil) -> UnsafeMutablePointer<ImFont> {
+    public mutating func addFontFromMemoryTTF(fontData font_data: UnsafeMutableRawPointer!, fontSize font_size: Int, sizePixels size_pixels: Float, fontCfg font_cfg: UnsafePointer<ImFontConfig>? = nil, glyphRanges glyph_ranges: UnsafePointer<ImWchar>? = nil) -> UnsafeMutablePointer<ImFont>! {
         return ImFontAtlas_AddFontFromMemoryTTF(&self, font_data, Int32(font_size), size_pixels, font_cfg, glyph_ranges)
     }
 
@@ -3361,7 +3361,7 @@ extension ImFontAtlas {
         return ImFontAtlas_Build(&self)
     }
 
-    public mutating func calcCustomRectUV(rect: UnsafePointer<ImFontAtlasCustomRect>) -> (out_uv_min: SIMD2<Float>, out_uv_max: SIMD2<Float>) {
+    public mutating func calcCustomRectUV(rect: UnsafePointer<ImFontAtlasCustomRect>!) -> (out_uv_min: SIMD2<Float>, out_uv_max: SIMD2<Float>) {
         var out_uv_min = ImVec2()
         var out_uv_max = ImVec2()
         ImFontAtlas_CalcCustomRectUV(&self, rect, &out_uv_min, &out_uv_max)
@@ -3384,7 +3384,7 @@ extension ImFontAtlas {
         ImFontAtlas_ClearTexData(&self)
     }
 
-    public mutating func getCustomRectByIndex(index: Int) -> UnsafeMutablePointer<ImFontAtlasCustomRect> {
+    public mutating func getCustomRectByIndex(_ index: Int) -> UnsafeMutablePointer<ImFontAtlasCustomRect>! {
         return ImFontAtlas_GetCustomRectByIndex(&self, Int32(index))
     }
 
@@ -3401,49 +3401,49 @@ extension ImFontAtlas {
         }
     }
 
-    public var glyphRangesChineseFull: UnsafePointer<ImWchar> {
+    public var glyphRangesChineseFull: UnsafePointer<ImWchar>! {
         mutating get {
             return ImFontAtlas_GetGlyphRangesChineseFull(&self)
         }
     }
 
-    public var glyphRangesChineseSimplifiedCommon: UnsafePointer<ImWchar> {
+    public var glyphRangesChineseSimplifiedCommon: UnsafePointer<ImWchar>! {
         mutating get {
             return ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(&self)
         }
     }
 
-    public var glyphRangesCyrillic: UnsafePointer<ImWchar> {
+    public var glyphRangesCyrillic: UnsafePointer<ImWchar>! {
         mutating get {
             return ImFontAtlas_GetGlyphRangesCyrillic(&self)
         }
     }
 
-    public var glyphRangesDefault: UnsafePointer<ImWchar> {
+    public var glyphRangesDefault: UnsafePointer<ImWchar>! {
         mutating get {
             return ImFontAtlas_GetGlyphRangesDefault(&self)
         }
     }
 
-    public var glyphRangesJapanese: UnsafePointer<ImWchar> {
+    public var glyphRangesJapanese: UnsafePointer<ImWchar>! {
         mutating get {
             return ImFontAtlas_GetGlyphRangesJapanese(&self)
         }
     }
 
-    public var glyphRangesKorean: UnsafePointer<ImWchar> {
+    public var glyphRangesKorean: UnsafePointer<ImWchar>! {
         mutating get {
             return ImFontAtlas_GetGlyphRangesKorean(&self)
         }
     }
 
-    public var glyphRangesThai: UnsafePointer<ImWchar> {
+    public var glyphRangesThai: UnsafePointer<ImWchar>! {
         mutating get {
             return ImFontAtlas_GetGlyphRangesThai(&self)
         }
     }
 
-    public var glyphRangesVietnamese: UnsafePointer<ImWchar> {
+    public var glyphRangesVietnamese: UnsafePointer<ImWchar>! {
         mutating get {
             return ImFontAtlas_GetGlyphRangesVietnamese(&self)
         }
@@ -3453,7 +3453,7 @@ extension ImFontAtlas {
         return ImFontAtlas_IsBuilt(&self)
     }
 
-    public mutating func setTexID(id: ImTextureID) -> Void {
+    public mutating func setTexID(_ id: ImTextureID) -> Void {
         ImFontAtlas_SetTexID(&self, id)
     }
 
@@ -3493,11 +3493,11 @@ extension ImFontGlyphRangesBuilder {
         ImFontGlyphRangesBuilder_AddChar(&self, c)
     }
 
-    public mutating func addRanges(ranges: UnsafePointer<ImWchar>) -> Void {
+    public mutating func addRanges(_ ranges: UnsafePointer<ImWchar>!) -> Void {
         ImFontGlyphRangesBuilder_AddRanges(&self, ranges)
     }
 
-    public mutating func addText(text: String, textEnd text_end: UnsafePointer<CChar>? = nil) -> Void {
+    public mutating func addText(_ text: String, textEnd text_end: UnsafePointer<CChar>? = nil) -> Void {
         ImFontGlyphRangesBuilder_AddText(&self, text, text_end)
     }
 
@@ -3593,7 +3593,7 @@ extension ImGuiPayload {
     }
 
     @discardableResult
-    public mutating func isDataType(type: String) -> Bool {
+    public mutating func isDataType(_ type: String) -> Bool {
         return ImGuiPayload_IsDataType(&self, type)
     }
 
@@ -3621,7 +3621,7 @@ extension ImGuiStorage {
         return ImGuiStorage_GetBool(&self, key, default_val)
     }
 
-    public mutating func getBoolRef(key: ImGuiID, defaultVal default_val: Bool = false) -> UnsafeMutablePointer<Bool> {
+    public mutating func getBoolRef(key: ImGuiID, defaultVal default_val: Bool = false) -> UnsafeMutablePointer<Bool>! {
         return ImGuiStorage_GetBoolRef(&self, key, default_val)
     }
 
@@ -3629,7 +3629,7 @@ extension ImGuiStorage {
         return ImGuiStorage_GetFloat(&self, key, default_val)
     }
 
-    public mutating func getFloatRef(key: ImGuiID, defaultVal default_val: Float = 0.0) -> UnsafeMutablePointer<Float> {
+    public mutating func getFloatRef(key: ImGuiID, defaultVal default_val: Float = 0.0) -> UnsafeMutablePointer<Float>! {
         return ImGuiStorage_GetFloatRef(&self, key, default_val)
     }
 
@@ -3637,15 +3637,15 @@ extension ImGuiStorage {
         return ImGuiStorage_GetInt(&self, key, Int32(default_val))
     }
 
-    public mutating func getIntRef(key: ImGuiID, defaultVal default_val: Int = 0) -> UnsafeMutablePointer<Int32> {
+    public mutating func getIntRef(key: ImGuiID, defaultVal default_val: Int = 0) -> UnsafeMutablePointer<Int32>! {
         return ImGuiStorage_GetIntRef(&self, key, Int32(default_val))
     }
 
-    public mutating func getVoidPtr(key: ImGuiID) -> UnsafeMutableRawPointer {
+    public mutating func getVoidPtr(key: ImGuiID) -> UnsafeMutableRawPointer! {
         return ImGuiStorage_GetVoidPtr(&self, key)
     }
 
-    public mutating func getVoidPtrRef(key: ImGuiID, defaultVal default_val: UnsafeMutableRawPointer? = nil) -> UnsafeMutablePointer<UnsafeMutableRawPointer?> {
+    public mutating func getVoidPtrRef(key: ImGuiID, defaultVal default_val: UnsafeMutableRawPointer? = nil) -> UnsafeMutablePointer<UnsafeMutableRawPointer?>! {
         return ImGuiStorage_GetVoidPtrRef(&self, key, default_val)
     }
 
@@ -3665,7 +3665,7 @@ extension ImGuiStorage {
         ImGuiStorage_SetInt(&self, key, Int32(val))
     }
 
-    public mutating func setVoidPtr(key: ImGuiID, val: UnsafeMutableRawPointer) -> Void {
+    public mutating func setVoidPtr(key: ImGuiID, val: UnsafeMutableRawPointer!) -> Void {
         ImGuiStorage_SetVoidPtr(&self, key, val)
     }
 
@@ -3683,7 +3683,7 @@ extension ImGuiTextBuffer {
         ImGuiTextBuffer_append(&self, str, str_end)
     }
 
-    public mutating func appendfv(format fmt: String) -> Void {
+    public mutating func append(_ fmt: String) -> Void {
         withVaList([]) { args in
             ImGuiTextBuffer_appendfv(&self, fmt, args)
         }
