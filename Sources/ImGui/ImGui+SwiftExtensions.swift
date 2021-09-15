@@ -91,6 +91,14 @@ extension ImGui {
         self.pushID(Unmanaged.passUnretained(identifier).toOpaque())
     }
     
+    public static func getID(strIdBegin str_id_begin: UnsafePointer<CChar>, strIdEnd str_id_end: UnsafePointer<CChar>?) -> ImGuiID {
+        return igGetID_StrStr(str_id_begin, str_id_end)
+    }
+    
+    public static func pushID(strIdBegin str_id_begin: UnsafePointer<CChar>, strIdEnd str_id_end: UnsafePointer<CChar>?) -> Void {
+        return igPushID_StrStr(str_id_begin, str_id_end)
+    }
+    
     public static func treeNode(_ identifier: AnyObject, text: String, flags: TreeNodeFlags = []) -> Bool {
         return self.treeNode(UnsafeRawPointer(Unmanaged.passUnretained(identifier).toOpaque()), text: text, flags: flags)
     }
