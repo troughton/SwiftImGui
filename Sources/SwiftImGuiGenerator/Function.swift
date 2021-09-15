@@ -47,6 +47,10 @@ final class ImGuiFunction {
                 self.type = arg.type
             }
             self.defaultValue = defaultValueStr
+            
+            if self.defaultValue == nil, self.name == "fmt" {
+                self.label = "text" // It's no longer a format string since we don't accept variadic parameters.
+            }
         }
     }
     
@@ -236,7 +240,7 @@ final class ImGuiFunction {
         
         declaration += name
         
-        let arguments: [ImGuiFunction.Argument]
+        var arguments: [ImGuiFunction.Argument]
         switch self.isComputedVariable {
         case true:
             declaration += ": "
@@ -251,6 +255,10 @@ final class ImGuiFunction {
                     return false // We don't pass in out-value parameters.
                 }
                 return true
+            }
+            
+            if let flagsIndex = arguments.lastIndex(where: { $0.name == "flags" }), flagsIndex != arguments.indices.last {
+                arguments.append(arguments.remove(at: flagsIndex))
             }
             
             for (i, arg) in arguments.enumerated() {

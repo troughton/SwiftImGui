@@ -37,13 +37,14 @@ extension ImGui {
         public var subCommands = [ImDrawCmd]()
     }
     
-    public static func renderData(drawData: UnsafeMutablePointer<ImDrawData>, clipScale: Float) -> RenderData {
+    public static func renderData(drawData: ImDrawData, clipScale: Float) -> RenderData {
+        var drawData = drawData
         if clipScale != 1.0 {
-            drawData.pointee.scaleClipRects(fbScale: SIMD2<Float>(repeating: clipScale))
+            drawData.scaleClipRects(fbScale: SIMD2<Float>(repeating: clipScale))
         }
         
-        let vertexBufferCount = Int(drawData.pointee.TotalVtxCount)
-        let indexBufferCount = Int(drawData.pointee.TotalIdxCount)
+        let vertexBufferCount = Int(drawData.TotalVtxCount)
+        let indexBufferCount = Int(drawData.TotalIdxCount)
         
         let vertexBuffer = UnsafeMutableBufferPointer(start: UnsafeMutablePointer<ImDrawVert>.allocate(capacity: vertexBufferCount), count: vertexBufferCount)
         let indexBuffer = UnsafeMutableBufferPointer(start: UnsafeMutablePointer<ImDrawIdx>.allocate(capacity: indexBufferCount), count: indexBufferCount)
@@ -56,8 +57,8 @@ extension ImGui {
         var drawCommand = DrawCommand()
         
         // Render command lists
-        for n in 0..<Int(drawData.pointee.CmdListsCount) {
-            let cmdList = drawData.pointee.CmdLists[n]!.pointee
+        for n in 0..<Int(drawData.CmdListsCount) {
+            let cmdList = drawData.CmdLists[n]!.pointee
             
             let vertexBufferSize = cmdList.vertexBufferSize
             let indexBufferSize = cmdList.indexBufferSize
@@ -80,8 +81,8 @@ extension ImGui {
             drawCommand.indexBufferByteOffset = indexBufferOffset * MemoryLayout<ImDrawIdx>.stride
         }
         
-        let displayPosition = SIMD2<Float>(drawData.pointee.DisplayPos)
-        let displaySize = SIMD2<Float>(drawData.pointee.DisplaySize.x, drawData.pointee.DisplaySize.y)
+        let displayPosition = SIMD2<Float>(drawData.DisplayPos)
+        let displaySize = SIMD2<Float>(drawData.DisplaySize.x, drawData.DisplaySize.y)
         
         return RenderData(vertexBuffer: vertexBuffer, indexBuffer: indexBuffer, drawCommands: drawCommands, displayPosition: displayPosition, displaySize: displaySize, clipScaleFactor: clipScale)
     }
