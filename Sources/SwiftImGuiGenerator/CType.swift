@@ -106,7 +106,7 @@ final class CTypeStruct: Hashable {
             reflectionPrinter.newLine()
             reflectionPrinter.print(
                 """
-                public init(rawValue: Self.RawValue) {
+                public init(rawValue: Int32) {
                     self.rawValue = rawValue
                 }
                 """)
@@ -374,16 +374,16 @@ indirect enum CType: Decodable {
             return "(\(repeatElement(element.cTypeName(in: namespace, isTopLevel: false), count: length).joined(separator: ", ")))"
         case .constPointer(let cType):
             if case .void = cType {
-                return "UnsafeRawPointer"
+                return "UnsafeRawPointer" + (isTopLevel ? "!" : "")
             } else if case .char = cType, isTopLevel {
                 return "String"
             }
-            return "UnsafePointer<\(cType.cTypeName(in: namespace, isTopLevel: false))>"
+            return "UnsafePointer<\(cType.cTypeName(in: namespace, isTopLevel: false))>" + (isTopLevel ? "!" : "")
         case .pointer(let cType):
             if case .void = cType {
-                return "UnsafeMutableRawPointer"
+                return "UnsafeMutableRawPointer" + (isTopLevel ? "!" : "")
             }
-            return "UnsafeMutablePointer<\(cType.cTypeName(in: namespace, isTopLevel: false))>"
+            return "UnsafeMutablePointer<\(cType.cTypeName(in: namespace, isTopLevel: false))>" + (isTopLevel ? "!" : "")
         case .struct(let structRef):
             if let structNamespace = structRef.namespace, structNamespace != namespace {
                 return "\(structNamespace).\(structRef.name)"

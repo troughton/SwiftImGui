@@ -63,6 +63,10 @@ func toSwiftParameterName<S: StringProtocol>(_ parameterName: S) -> String {
                     return "color"
                 case "bg":
                     return "background"
+                case "ctx":
+                    return "context"
+                case "idx":
+                    return "index"
                 default:
                     return String(comp)
                 }
@@ -82,6 +86,57 @@ func toSwiftParameterName<S: StringProtocol>(_ parameterName: S) -> String {
         
     }
 }
+
+let nameMappings = [
+    "colorEdit3": "colorEdit",
+    "colorEdit4": "colorEdit",
+    "colorPicker3": "colorPicker",
+    "colorPicker4": "colorPicker",
+    "checkboxFlags": "checkbox",
+    "contentRegionAvail": "contentRegionAvailable",
+    "dragFloat": "drag",
+    "dragFloat2": "drag",
+    "dragFloat3": "drag",
+    "dragFloat4": "drag",
+    "dragFloatRange2": "drag",
+    "dragInt": "drag",
+    "dragInt2": "drag",
+    "dragInt3": "drag",
+    "dragInt4": "drag",
+    "dragIntRange2": "drag",
+    "dragScalar": "drag",
+    "dragScalarN": "drag",
+    "fontTexUvWhitePixel": "fontTexUVWhitePixel",
+    "inputDouble": "input",
+    "inputFloat": "input",
+    "inputFloat2": "input",
+    "inputFloat3": "input",
+    "inputFloat4": "input",
+    "inputInt": "input",
+    "inputInt2": "input",
+    "inputInt3": "input",
+    "inputInt4": "input",
+    "inputScalar": "input",
+    "inputScalarN": "input",
+    "sliderFloat": "slider",
+    "sliderFloat2": "slider",
+    "sliderFloat3": "slider",
+    "sliderFloat4": "slider",
+    "sliderInt": "slider",
+    "sliderInt2": "slider",
+    "sliderInt3": "slider",
+    "sliderInt4": "slider",
+    "sliderScalar": "slider",
+    "sliderScalarN": "slider",
+    "tableSetBgColor": "tableSetBackgroundColor",
+    "treeNodeEx": "treeNode",
+    "vSliderFloat": "slider",
+    "vSliderInt": "slider",
+    "vSliderScalar": "slider",
+    "windowDpiScale": "windowDPIScale",
+    "addDrawCmd": "addDrawCommand",
+    "appendfv": "append",
+]
 
 func toSwiftFunctionName<S: StringProtocol>(_ functionName: S) -> String {
     if functionName == "HSV" {
@@ -106,17 +161,8 @@ func toSwiftFunctionName<S: StringProtocol>(_ functionName: S) -> String {
     if ["repeat", "while", "super", "default"].contains(name) {
         return "`\(name)`"
     }
-
-    for typeSpecifier in ["Int2", "Int3", "Int4", "Int", "Float2", "Float3", "Float4", "Float"] {
-        if name.hasSuffix(typeSpecifier) {
-            name.removeLast(typeSpecifier.count)
-        }
-    }
-    if name.hasSuffix("Edit3") || name.hasSuffix("Edit4") {
-        name.removeLast()
-    }
     
-    return name
+    return nameMappings[name] ?? name
 }
 
 func toSwiftMemberName<S: StringProtocol>(_ memberName: S) -> String {
