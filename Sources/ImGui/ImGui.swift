@@ -45,18 +45,6 @@ func withMutableMembers<T, R>(of tuple: inout (T, T),  _ perform: (UnsafeMutable
 }
 
 public enum ImGui {
-    public struct ActivateFlags: OptionSet  {
-        public var rawValue: Int32
-
-        public init(rawValue: Int32) {
-            self.rawValue = rawValue
-        }
-
-        public static var preferInput: ActivateFlags { return ActivateFlags(rawValue: 1) }
-        public static var preferTweak: ActivateFlags { return ActivateFlags(rawValue: 2) }
-        public static var tryToPreserveState: ActivateFlags { return ActivateFlags(rawValue: 4) }
-    }
-
     public enum Axis: Int32, CaseIterable  {
         case none = -1
         case x = 0
@@ -393,11 +381,11 @@ public enum ImGui {
         public static var childWindows: HoveredFlags { return HoveredFlags(rawValue: 1) }
         public static var rootWindow: HoveredFlags { return HoveredFlags(rawValue: 2) }
         public static var anyWindow: HoveredFlags { return HoveredFlags(rawValue: 4) }
-        public static var allowWhenBlockedByPopup: HoveredFlags { return HoveredFlags(rawValue: 16) }
+        public static var allowWhenBlockedByPopup: HoveredFlags { return HoveredFlags(rawValue: 8) }
         public static var allowWhenBlockedByActiveItem: HoveredFlags { return HoveredFlags(rawValue: 32) }
         public static var allowWhenOverlapped: HoveredFlags { return HoveredFlags(rawValue: 64) }
         public static var allowWhenDisabled: HoveredFlags { return HoveredFlags(rawValue: 128) }
-        public static var rectOnly: HoveredFlags { return HoveredFlags(rawValue: 112) }
+        public static var rectOnly: HoveredFlags { return HoveredFlags(rawValue: 104) }
         public static var rootAndChildWindows: HoveredFlags { return HoveredFlags(rawValue: 3) }
     }
 
@@ -460,6 +448,16 @@ public enum ImGui {
         public static var mergedItem: InputTextFlagsPrivate { return InputTextFlagsPrivate(rawValue: 268435456) }
     }
 
+    public struct ItemAddFlags: OptionSet  {
+        public var rawValue: Int32
+
+        public init(rawValue: Int32) {
+            self.rawValue = rawValue
+        }
+
+        public static var focusable: ItemAddFlags { return ItemAddFlags(rawValue: 1) }
+    }
+
     public struct ItemFlags: OptionSet  {
         public var rawValue: Int32
 
@@ -475,7 +473,6 @@ public enum ImGui {
         public static var selectableDontClosePopup: ItemFlags { return ItemFlags(rawValue: 32) }
         public static var mixedValue: ItemFlags { return ItemFlags(rawValue: 64) }
         public static var readOnly: ItemFlags { return ItemFlags(rawValue: 128) }
-        public static var inputable: ItemFlags { return ItemFlags(rawValue: 256) }
     }
 
     public struct ItemStatusFlags: OptionSet  {
@@ -580,6 +577,12 @@ public enum ImGui {
         public static var padLStick: NavDirSourceFlags { return NavDirSourceFlags(rawValue: 4) }
     }
 
+    public enum NavForward: Int32, CaseIterable  {
+        case none = 0
+        case forwardQueued = 1
+        case forwardActive = 2
+    }
+
     public struct NavHighlightFlags: OptionSet  {
         public var rawValue: Int32
 
@@ -635,8 +638,6 @@ public enum ImGui {
         public static var allowCurrentNavId: NavMoveFlags { return NavMoveFlags(rawValue: 16) }
         public static var alsoScoreVisibleSet: NavMoveFlags { return NavMoveFlags(rawValue: 32) }
         public static var scrollToEdge: NavMoveFlags { return NavMoveFlags(rawValue: 64) }
-        public static var forwarded: NavMoveFlags { return NavMoveFlags(rawValue: 128) }
-        public static var debugNoResult: NavMoveFlags { return NavMoveFlags(rawValue: 256) }
     }
 
     public struct NextItemDataFlags: OptionSet  {
@@ -2744,6 +2745,10 @@ public enum ImGui {
         var pOut = ImVec2()
         igGetWindowContentRegionMin(&pOut)
         return (SIMD2<Float>(pOut))
+    }
+
+    public static var windowContentRegionWidth: Float {
+        return igGetWindowContentRegionWidth()
     }
 
     public static var windowDrawList: UnsafeMutablePointer<ImDrawList>! {
