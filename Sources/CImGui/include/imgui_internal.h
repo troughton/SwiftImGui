@@ -37,6 +37,7 @@ Index of this file:
 */
 
 #pragma once
+#ifdef __cplusplus
 #ifndef IMGUI_DISABLE
 
 //-----------------------------------------------------------------------------
@@ -186,7 +187,7 @@ namespace ImStb
 #define STB_TEXTEDIT_GETWIDTH_NEWLINE   (-1.0f)
 #define STB_TEXTEDIT_UNDOSTATECOUNT     99
 #define STB_TEXTEDIT_UNDOCHARCOUNT      999
-#include "imstb_textedit.h"
+#include "../imgui/imstb_textedit.h"
 
 } // namespace ImStb
 
@@ -3037,3 +3038,4 @@ extern void         ImGuiTestEngineHook_Log(ImGuiContext* ctx, const char* fmt, 
 #endif
 
 #endif // #ifndef IMGUI_DISABLE
+#endif // ifdef __cplusplus

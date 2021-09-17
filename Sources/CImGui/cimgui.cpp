@@ -4,11 +4,11 @@
 //docking branch
 
 #define CIMGUI_SKIP_DEFINE_ENUMS_AND_STRUCTS
-#include "./imgui/imgui.h"
+#include "include/imgui.h"
 #ifdef CIMGUI_FREETYPE
 #include "./imgui/misc/freetype/imgui_freetype.h"
 #endif
-#include "./imgui/imgui_internal.h"
+#include "include/imgui_internal.h"
 #include "cimgui.h"
 
 

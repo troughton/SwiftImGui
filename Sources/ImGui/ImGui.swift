@@ -2468,7 +2468,7 @@ public enum ImGui {
         igSetNextWindowFocus()
     }
 
-    public static func setNextWindowPos(position pos: SIMD2<Float>, cond: Condition = [], pivot: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Void {
+    public static func setNextWindowPosition(_ pos: SIMD2<Float>, cond: Condition = [], pivot: SIMD2<Float> = SIMD2<Float>(0, 0)) -> Void {
         igSetNextWindowPos(ImVec2(pos), cond.rawValue, ImVec2(pivot))
     }
 
@@ -2911,7 +2911,7 @@ public enum ImGui {
         return igGetWindowHeight()
     }
 
-    public static var windowPos: SIMD2<Float> {
+    public static var windowPosition: SIMD2<Float> {
         var pOut = ImVec2()
         igGetWindowPos(&pOut)
         return (SIMD2<Float>(pOut))

@@ -136,6 +136,8 @@ let nameMappings = [
     "windowDpiScale": "windowDPIScale",
     "addDrawCmd": "addDrawCommand",
     "appendfv": "append",
+    "setNextWindowPos": "setNextWindowPosition",
+    "windowPos": "windowPosition"
 ]
 
 func toSwiftFunctionName<S: StringProtocol>(_ functionName: S) -> String {
