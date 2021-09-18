@@ -214,28 +214,28 @@ import CImGui
 
 extension SIMD2 where Scalar == Float {
     @inlinable
-    init(_ imVec: ImVec2) {
+    public init(_ imVec: ImVec2) {
         self.init(imVec.x, imVec.y)
     }
 }
 
 extension SIMD4 where Scalar == Float {
     @inlinable
-    init(_ imVec: ImVec4) {
+    public init(_ imVec: ImVec4) {
         self.init(imVec.x, imVec.y, imVec.z, imVec.w)
     }
 }
 
 extension ImVec2 {
     @inlinable
-    init(_ v: SIMD2<Float>) {
+    public init(_ v: SIMD2<Float>) {
         self.init(x: v.x, y: v.y)
     }
 }
 
 extension ImVec4 {
     @inlinable
-    init(_ v: SIMD4<Float>) {
+    public init(_ v: SIMD4<Float>) {
         self.init(x: v.x, y: v.y, z: v.z, w: v.w)
     }
 }
@@ -324,4 +324,5 @@ for (type, functions) in types.sorted(by: { $0.key < $1.key }) {
     reflectionPrinter.newLine()
 }
 
+try! reflectionPrinter.write(to: URL(fileURLWithPath: "/Users/Thomas/troughton Repositories/SwiftImGui/Sources/ImGui/ImGui.swift"))
 print(reflectionPrinter.buffer)
